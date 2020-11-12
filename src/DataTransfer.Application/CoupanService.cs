@@ -1,4 +1,5 @@
 ﻿using DataTransfer.Domain.Entities.Coupan;
+using DataTransfer.EntityFramework.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,22 +12,22 @@ namespace DataTransfer.Application
 {
     public class CoupanService : ApplicationService
     {
-        private readonly IRepository<AddCoupan> _addCoupanRepository;
-        public CoupanService(IRepository<AddCoupan> addCoupanRepository)
+        private readonly AddCoupanRepository _addCoupanRepository;
+        public CoupanService(AddCoupanRepository addCoupanRepository)
         {
             this._addCoupanRepository = addCoupanRepository;
         }
-
         [UnitOfWork]
         public async Task<string> AddCoupanAsync()
         {
-            //await _addCoupanRepository.InsertAsync(new AddCoupan()
-            //{
-            //    OrderId = 1,
-            //    OrderNO = "Order1",
-            //    StudentName = "Alex",
-            //    AddCount = 2
-            //});
+            await _addCoupanRepository.InsertAsync(new AddCoupan()
+            {
+                OrderId = 1,
+                OrderNO = "Order1",
+                StudentName = "Alex",
+                AddCount = 2
+            });
+            //throw new Exception("123");
             //CurrentUnitOfWork为什么为null
             //await CurrentUnitOfWork.SaveChangesAsync();
             return "yes";
