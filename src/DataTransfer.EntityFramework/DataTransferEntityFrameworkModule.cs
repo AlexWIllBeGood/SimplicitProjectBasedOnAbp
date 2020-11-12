@@ -19,9 +19,21 @@ namespace DataTransfer.EntityFramework
             {
                 builder.AddDefaultRepositories(includeAllEntities: true);
             });
-            
-            context.Services.Configure<AbpDbContextOptions>(options=> {
-                options.UseMySQL();
+
+            context.Services.Configure<AbpDbContextOptions>(options =>
+            {
+                options.Configure<LocalMySqlDbContext>(ctx =>
+                {
+                    ctx.UseMySQL();
+                });
+            });
+
+            context.Services.Configure<AbpDbContextOptions>(options =>
+            {
+                options.Configure<LocalMySqlDbContext>(ctx =>
+                {
+                    ctx.UseMySQL();
+                });
             });
         }
 
