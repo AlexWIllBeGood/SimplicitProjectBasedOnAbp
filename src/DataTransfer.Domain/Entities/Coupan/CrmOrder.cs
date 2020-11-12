@@ -175,8 +175,8 @@ namespace DataTransfer.Domain.Entities.Coupan
         /// </summary>
         public bool? Orde_IsPos { get; set; }
 
-        [NotMapped]
-        public int Id { get; set; } = 1;
+        [NotMapped]      
+        public int Id { get; set; }
 
         public object[] GetKeys()
         {

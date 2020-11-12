@@ -13,6 +13,7 @@ namespace DataTransfer.EntityFramework
     public class ABCCrmDbContext : AbpDbContext<ABCCrmDbContext>
     {
         public DbSet<CrmOrder> CrmOrders { get; set; }
+        public DbSet<CrmDiscountUse> CrmDiscountUses { get; set; }
         public ABCCrmDbContext(DbContextOptions<ABCCrmDbContext> options) : base(options)
         {
 

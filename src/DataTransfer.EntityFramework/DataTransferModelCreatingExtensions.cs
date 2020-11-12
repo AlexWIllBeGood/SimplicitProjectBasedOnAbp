@@ -11,7 +11,6 @@ namespace DataTransfer.EntityFramework
     {
         public static void ConfigureLocal(this ModelBuilder builder)
         {
-            //TODO
             builder.Entity<AddCoupan>(options=> {
                 options.ConfigureByConvention();
                 options.ToTable("AddCoupan");
@@ -20,10 +19,15 @@ namespace DataTransfer.EntityFramework
 
         public static void ConfigureCrm(this ModelBuilder builder)
         {
-            //TODO
+            
             builder.Entity<CrmOrder>(options => {
                 //options.ConfigureByConvention();
                 options.ToTable("Orders");
+            });
+
+            builder.Entity<CrmDiscountUse>(options => {
+                //options.ConfigureByConvention();
+                options.ToTable("DiscountUse");
             });
         }
     }

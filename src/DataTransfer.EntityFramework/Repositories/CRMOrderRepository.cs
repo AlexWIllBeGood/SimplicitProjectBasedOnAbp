@@ -8,9 +8,9 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace DataTransfer.EntityFramework.Repositories
 {
-    public class CRMRepository : EfCoreRepository<ABCCrmDbContext, CrmOrder, int>
+    public class CRMOrderRepository : EfCoreRepository<ABCCrmDbContext, CrmOrder, int>
     {
-        public CRMRepository(IDbContextProvider<ABCCrmDbContext> dbContextProvider) : base(dbContextProvider)
+        public CRMOrderRepository(IDbContextProvider<ABCCrmDbContext> dbContextProvider) : base(dbContextProvider)
         {
 
         }
