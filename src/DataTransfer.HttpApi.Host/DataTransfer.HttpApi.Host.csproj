@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="3.3.1" />
   </ItemGroup>
 
@@ -8,7 +12,7 @@
     <ProjectReference Include="..\DataTransfer.Application\DataTransfer.Application.csproj" />
     <ProjectReference Include="..\DataTransfer.Domain\DataTransfer.Domain.csproj" />
     <ProjectReference Include="..\DataTransfer.EntityFramework\DataTransfer.EntityFramework.csproj" />
-    <ProjectReference Include="..\DataTransfer.EntityFramework.Migration\DataTransfer.EntityFramework.Migration.csproj" />
+    <ProjectReference Include="..\DataTransfer.EntityFramework.Migration\DataTransfer.EntityFramework.DbMigrations.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

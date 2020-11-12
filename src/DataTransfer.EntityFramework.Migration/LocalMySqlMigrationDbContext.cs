@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Volo.Abp.EntityFrameworkCore;
 
-namespace DataTransfer.EntityFramework.Migration
+namespace DataTransfer.EntityFramework.DbMigrations
 {
-    public class LocalMySqlMigrationDbContext : AbpDbContext<LocalMySqlMigrationDbContext>
+    public class LocalMySqlMigrationDbContext : DbContext
     {
-        public LocalMySqlMigrationDbContext(DbContextOptions<LocalMySqlMigrationDbContext> options) : base(options)
+        public LocalMySqlMigrationDbContext([NotNull] DbContextOptions options) : base(options)
         {
         }
 

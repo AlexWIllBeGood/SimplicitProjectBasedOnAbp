@@ -1,23 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A7600B2F-51CC-451C-A337-C4A481429B65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTransfer.HttpApi.Host", "src\DataTransfer.HttpApi.Host\DataTransfer.HttpApi.Host.csproj", "{8964FEEB-674F-4329-82C1-7D8E11BF06E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransfer.HttpApi.Host", "src\DataTransfer.HttpApi.Host\DataTransfer.HttpApi.Host.csproj", "{8964FEEB-674F-4329-82C1-7D8E11BF06E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTransfer.Application", "src\DataTransfer.Application\DataTransfer.Application.csproj", "{37DD1CF3-0BA6-42BE-B577-F693C2885E5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransfer.Application", "src\DataTransfer.Application\DataTransfer.Application.csproj", "{37DD1CF3-0BA6-42BE-B577-F693C2885E5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTransfer.Application.Contracts", "src\DataTransfer.Application.Contracts\DataTransfer.Application.Contracts.csproj", "{D3D8ACBC-AF76-4784-9B00-82C23408BA48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransfer.Application.Contracts", "src\DataTransfer.Application.Contracts\DataTransfer.Application.Contracts.csproj", "{D3D8ACBC-AF76-4784-9B00-82C23408BA48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTransfer.Domain", "src\DataTransfer.Domain\DataTransfer.Domain.csproj", "{9C814E99-D7C1-4C5B-AA60-D9FC7EC591BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransfer.Domain", "src\DataTransfer.Domain\DataTransfer.Domain.csproj", "{9C814E99-D7C1-4C5B-AA60-D9FC7EC591BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTransfer.Domain.Shared", "src\DataTransfer.Domain.Shared\DataTransfer.Domain.Shared.csproj", "{54103AC0-6F6C-4138-9FD9-52EEC5EEAF53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransfer.Domain.Shared", "src\DataTransfer.Domain.Shared\DataTransfer.Domain.Shared.csproj", "{54103AC0-6F6C-4138-9FD9-52EEC5EEAF53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTransfer.EntityFramework", "src\DataTransfer.EntityFramework\DataTransfer.EntityFramework.csproj", "{C87AB5EE-297E-43EB-8CD0-59120B7C8D7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransfer.EntityFramework", "src\DataTransfer.EntityFramework\DataTransfer.EntityFramework.csproj", "{C87AB5EE-297E-43EB-8CD0-59120B7C8D7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTransfer.EntityFramework.Migration", "src\DataTransfer.EntityFramework.Migration\DataTransfer.EntityFramework.Migration.csproj", "{03028E32-721A-44E3-A8CF-5AC68F31A717}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransfer.EntityFramework.DbMigrations", "src\DataTransfer.EntityFramework.Migration\DataTransfer.EntityFramework.DbMigrations.csproj", "{03028E32-721A-44E3-A8CF-5AC68F31A717}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +27,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8964FEEB-674F-4329-82C1-7D8E11BF06E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -117,6 +114,9 @@ Global
 		{03028E32-721A-44E3-A8CF-5AC68F31A717}.Release|x86.ActiveCfg = Release|Any CPU
 		{03028E32-721A-44E3-A8CF-5AC68F31A717}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8964FEEB-674F-4329-82C1-7D8E11BF06E4} = {A7600B2F-51CC-451C-A337-C4A481429B65}
 		{37DD1CF3-0BA6-42BE-B577-F693C2885E5D} = {A7600B2F-51CC-451C-A337-C4A481429B65}
@@ -125,5 +125,8 @@ Global
 		{54103AC0-6F6C-4138-9FD9-52EEC5EEAF53} = {A7600B2F-51CC-451C-A337-C4A481429B65}
 		{C87AB5EE-297E-43EB-8CD0-59120B7C8D7F} = {A7600B2F-51CC-451C-A337-C4A481429B65}
 		{03028E32-721A-44E3-A8CF-5AC68F31A717} = {A7600B2F-51CC-451C-A337-C4A481429B65}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9939A0F7-F5EE-4913-A048-D04B0BC41EC6}
 	EndGlobalSection
 EndGlobal

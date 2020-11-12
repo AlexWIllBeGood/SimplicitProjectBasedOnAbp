@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="3.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DataTransfer.Domain.Shared\DataTransfer.Domain.Shared.csproj" />
-    <ProjectReference Include="..\DataTransfer.EntityFramework\DataTransfer.EntityFramework.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

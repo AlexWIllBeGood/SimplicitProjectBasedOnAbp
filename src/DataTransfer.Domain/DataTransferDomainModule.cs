@@ -1,12 +1,12 @@
 ﻿using DataTransfer.Domain.Shared;
-using DataTransfer.EntityFramework;
 using System;
+using Volo.Abp.Domain;
 using Volo.Abp.Modularity;
 
 namespace DataTransfer.Domain
 {
     [DependsOn(typeof(DataTransferDomainSharedModule),
-        typeof(DataTransferEntityFrameworkModule))]
+        typeof(AbpDddDomainModule))]
     public class DataTransferDomainModule : AbpModule
     {
     }
