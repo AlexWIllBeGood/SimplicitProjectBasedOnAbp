@@ -15,7 +15,7 @@ namespace DataTransfer.EntityFramework.DbMigrations
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureDataTransfer();
+            modelBuilder.ConfigureLocal();
         }
     }
 }

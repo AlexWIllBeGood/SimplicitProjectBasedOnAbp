@@ -9,12 +9,21 @@ namespace DataTransfer.EntityFramework
 {
     public static class DataTransferModelCreatingExtensions
     {
-        public static void ConfigureDataTransfer(this ModelBuilder builder)
+        public static void ConfigureLocal(this ModelBuilder builder)
         {
             //TODO
             builder.Entity<AddCoupan>(options=> {
                 options.ConfigureByConvention();
                 options.ToTable("AddCoupan");
+            });
+        }
+
+        public static void ConfigureCrm(this ModelBuilder builder)
+        {
+            //TODO
+            builder.Entity<CrmOrder>(options => {
+                //options.ConfigureByConvention();
+                options.ToTable("Orders");
             });
         }
     }

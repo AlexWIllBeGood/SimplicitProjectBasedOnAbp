@@ -9,17 +9,17 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace DataTransfer.EntityFramework
 {
-    [ConnectionStringName("LocalMysql")]
-    public class LocalMySqlDbContext : AbpDbContext<LocalMySqlDbContext>
+    [ConnectionStringName("ABCCrm")]
+    public class ABCCrmDbContext : AbpDbContext<ABCCrmDbContext>
     {
-        public DbSet<AddCoupan> AddCoupans { get; set; }
-        public LocalMySqlDbContext(DbContextOptions<LocalMySqlDbContext> options) : base(options)
+        public DbSet<CrmOrder> CrmOrders { get; set; }
+        public ABCCrmDbContext(DbContextOptions<ABCCrmDbContext> options) : base(options)
         {
 
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureLocal();
+            modelBuilder.ConfigureCrm();
         }
     }
 }

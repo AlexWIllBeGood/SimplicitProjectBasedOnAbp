@@ -17,22 +17,24 @@ namespace DataTransfer.EntityFramework
         {
             context.Services.AddAbpDbContext<LocalMySqlDbContext>(builder =>
             {
-                builder.AddDefaultRepositories(includeAllEntities: true);
+                //builder.AddDefaultRepositories(includeAllEntities: true);
             });
 
+            context.Services.AddAbpDbContext<ABCCrmDbContext>(builder =>
+            {
+                //builder.AddDefaultRepositories(includeAllEntities: true);
+            });
+
+            //配置两个dbcontex使用不同的数据库
             context.Services.Configure<AbpDbContextOptions>(options =>
             {
                 options.Configure<LocalMySqlDbContext>(ctx =>
                 {
                     ctx.UseMySQL();
                 });
-            });
-
-            context.Services.Configure<AbpDbContextOptions>(options =>
-            {
-                options.Configure<LocalMySqlDbContext>(ctx =>
+                options.Configure<ABCCrmDbContext>(ctx =>
                 {
-                    ctx.UseMySQL();
+                    ctx.UseSqlServer();
                 });
             });
         }
