@@ -40,7 +40,10 @@ namespace DataTransfer.HttpApi.Host
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "api/{controller}/{action}/{id?}"
+                    );
             });
         }
     }

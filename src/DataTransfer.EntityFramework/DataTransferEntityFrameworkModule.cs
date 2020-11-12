@@ -15,9 +15,9 @@ namespace DataTransfer.EntityFramework
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            context.Services.AddAbpDbContext<LocalMySqlDbContext>(builder=> {
-                //builder.AddDefaultRepositories(includeAllEntities: true);
-                var a = 1;
+            context.Services.AddAbpDbContext<LocalMySqlDbContext>(builder =>
+            {
+                builder.AddDefaultRepositories(includeAllEntities: true);
             });
             
             context.Services.Configure<AbpDbContextOptions>(options=> {

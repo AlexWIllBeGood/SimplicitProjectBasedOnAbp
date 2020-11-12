@@ -10,6 +10,6 @@ namespace DataTransfer.Domain.Entities.Coupan
         public int OrderId { get; set; }
         public string OrderNO { get; set; }
         public string StudentName { get; set; }
-        public string AddCount { get; set; }
+        public int AddCount { get; set; }
     }
 }
