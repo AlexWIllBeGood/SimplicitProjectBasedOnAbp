@@ -20,9 +20,12 @@ namespace DataTransfer.Application
             this._addCoupanRepository = addCoupanRepository;
             this._cRMRepository = cRMRepository;
         }
+
         [UnitOfWork]
+        [Obsolete]
         public async Task<string> AddCoupanAsync()
         {
+
             //await _addCoupanRepository.InsertAsync(new AddCoupan()
             //{
             //    OrderId = 1,
@@ -30,6 +33,7 @@ namespace DataTransfer.Application
             //    StudentName = "Alex",
             //    AddCount = 2
             //});
+
             try
             {
                 var temp = _cRMRepository
@@ -45,6 +49,16 @@ namespace DataTransfer.Application
             //CurrentUnitOfWork为什么为null
             //await CurrentUnitOfWork.SaveChangesAsync();
             return "yes";
+        }
+
+        /// <summary>
+        /// 将代金券信息插入CRM
+        /// </summary>
+        /// <returns></returns>
+        [UnitOfWork]
+        public async Task TrasnferCoupanDataToCRM()
+        {
+            
         }
     }
 }
