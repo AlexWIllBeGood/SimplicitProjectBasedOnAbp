@@ -47,7 +47,9 @@ namespace DataTransfer.Application.CrmServices
 
                 foreach(var tc in targetClasses)
                 {
-                    
+                    clsses.Add(new ClassDendMtsModel() {
+                        SchoolId=
+                    });
                 }
 
                 return "yes";

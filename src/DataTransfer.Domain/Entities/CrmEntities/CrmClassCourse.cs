@@ -242,6 +242,8 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         #region 导航属性
         [ForeignKey("Clas_ProdID")]
         public virtual CrmProduct Product { get; set; }
+        [ForeignKey("Clas_BranID")]
+        public virtual CrmBranch Branch { get; set; }
         #endregion
     }
 }
