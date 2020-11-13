@@ -45,6 +45,36 @@ namespace DataTransfer.EntityFramework
                 options.ToTable("Products");
             });
 
+            builder.Entity<CrmBranch>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("Basis_Branch");
+            });
+
+            builder.Entity<CrmContract>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("Contract");
+            });
+
+            builder.Entity<CrmLead>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("Lead");
+            });
+
+            builder.Entity<CrmProductLevel>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("ProductLevel");
+            });
+
+            builder.Entity<CrmUser>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("Basis_User");
+            });
+
         }
     }
 }

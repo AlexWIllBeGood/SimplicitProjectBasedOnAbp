@@ -18,6 +18,8 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         [Key]
         [Column("Prod_ProductID")]
         public int Prod_ID { get; set; }
+
+        [NotMapped]
         /// <summary>
         /// 子类ID
         /// </summary>

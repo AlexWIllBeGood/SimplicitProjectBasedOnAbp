@@ -14,8 +14,15 @@ namespace DataTransfer.EntityFramework
     public class ABCCrmDbContext : AbpDbContext<ABCCrmDbContext>
     {
         public DbSet<CrmOrder> CrmOrders { get; set; }
+        public DbSet<CrmClassCourse> CrmClassCourses { get; set; }
         public DbSet<CrmDiscountUse> CrmDiscountUses { get; set; }
         public DbSet<CrmProduct> CrmProducts { get; set; }
+        public DbSet<CrmBranch> CrmBranchs { get; set; }
+        public DbSet<CrmContract> CrmContracts { get; set; }
+        public DbSet<CrmLead> CrmLeads { get; set; }
+        public DbSet<CrmProductLevel> CrmProductLevels { get; set; }
+        public DbSet<CrmUser> CrmUsers { get; set; }
+
         public ABCCrmDbContext(DbContextOptions<ABCCrmDbContext> options) : base(options)
         {
 
