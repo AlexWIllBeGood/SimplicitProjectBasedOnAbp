@@ -15,6 +15,12 @@
     <ProjectReference Include="..\DataTransfer.EntityFramework.Migration\DataTransfer.EntityFramework.DbMigrations.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>

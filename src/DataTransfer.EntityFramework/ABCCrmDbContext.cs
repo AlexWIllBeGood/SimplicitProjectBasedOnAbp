@@ -1,4 +1,5 @@
 ﻿using DataTransfer.Domain.Entities.Coupan;
+using DataTransfer.Domain.Entities.CrmEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;
@@ -13,6 +14,8 @@ namespace DataTransfer.EntityFramework
     public class ABCCrmDbContext : AbpDbContext<ABCCrmDbContext>
     {
         public DbSet<CrmOrder> CrmOrders { get; set; }
+        public DbSet<CrmDiscountUse> CrmDiscountUses { get; set; }
+        public DbSet<CrmProduct> CrmProducts { get; set; }
         public ABCCrmDbContext(DbContextOptions<ABCCrmDbContext> options) : base(options)
         {
 

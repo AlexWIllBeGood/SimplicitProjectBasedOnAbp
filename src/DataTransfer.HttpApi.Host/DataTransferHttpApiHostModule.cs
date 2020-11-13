@@ -1,8 +1,10 @@
 ﻿using DataTransfer.Application;
+using DataTransfer.Application.CrmServices;
 using DataTransfer.Domain;
 using DataTransfer.EntityFramework;
 using DataTransfer.EntityFramework.DbMigrations;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Volo.Abp;
@@ -20,8 +22,20 @@ namespace DataTransfer.HttpApi.Host
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
-            var services = context.Services;
-            services.AddControllers();
+            IConfiguration configuration = context.Services.GetConfiguration();
+            ConfigureControllers(context);
+            ConfigureSettings(context, configuration);
+        }
+
+        public void ConfigureControllers(ServiceConfigurationContext context)
+        {
+            context.Services.AddControllers();
+        }
+
+        public void ConfigureSettings(ServiceConfigurationContext context,IConfiguration configuration)
+        {
+            //配置Crm配置
+            context.Services.ConfigureOptions<CRMOptions>(configuration.GetSection("CRMSettings"));
         }
 
         public override void OnApplicationInitialization(ApplicationInitializationContext context)

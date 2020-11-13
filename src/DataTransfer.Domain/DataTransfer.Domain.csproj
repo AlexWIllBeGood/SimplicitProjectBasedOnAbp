@@ -1,6 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Compile Remove="Entities\新文件夹\**" />
+    <EmbeddedResource Remove="Entities\新文件夹\**" />
+    <None Remove="Entities\新文件夹\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Volo.Abp.Ddd.Domain" Version="3.3.1" />
     <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="3.3.1" />
   </ItemGroup>

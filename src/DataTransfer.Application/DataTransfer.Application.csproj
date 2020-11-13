@@ -5,6 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\DataTransfer.Infrastructure\DataTransfer.Infrastructure.csproj" />
     <ProjectReference Include="..\DataTransfer.Application.Contracts\DataTransfer.Application.Contracts.csproj" />
     <ProjectReference Include="..\DataTransfer.Domain\DataTransfer.Domain.csproj" />
     <ProjectReference Include="..\DataTransfer.EntityFramework\DataTransfer.EntityFramework.csproj" />

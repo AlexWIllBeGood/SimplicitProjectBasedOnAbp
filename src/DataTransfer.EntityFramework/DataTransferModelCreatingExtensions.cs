@@ -1,4 +1,5 @@
 ﻿using DataTransfer.Domain.Entities.Coupan;
+using DataTransfer.Domain.Entities.CrmEntities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,6 @@ namespace DataTransfer.EntityFramework
     {
         public static void ConfigureLocal(this ModelBuilder builder)
         {
-            //TODO
             builder.Entity<AddCoupan>(options=> {
                 options.ConfigureByConvention();
                 options.ToTable("AddCoupan");
@@ -20,11 +20,31 @@ namespace DataTransfer.EntityFramework
 
         public static void ConfigureCrm(this ModelBuilder builder)
         {
-            //TODO
-            builder.Entity<CrmOrder>(options => {
+
+            builder.Entity<CrmOrder>(options =>
+            {
                 //options.ConfigureByConvention();
                 options.ToTable("Orders");
             });
+
+            builder.Entity<CrmDiscountUse>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("DiscountUse");
+            });
+
+            builder.Entity<CrmClassCourse>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("ClassCourse");
+            });
+
+            builder.Entity<CrmProduct>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("Products");
+            });
+
         }
     }
 }
