@@ -8,6 +8,11 @@
     <ProjectReference Include="..\DataTransfer.Domain.Shared\DataTransfer.Domain.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\OutputDtos\" />
+    <Folder Include="IApplicationServices\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>

@@ -5,7 +5,7 @@
       "launchBrowser": true,
       "launchUrl": "api/ABC/AddCoupan",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Product"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:5000"
     }

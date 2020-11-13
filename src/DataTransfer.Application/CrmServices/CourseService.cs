@@ -1,8 +1,10 @@
-﻿using DataTransfer.EntityFramework.Repositories.CrmRepositories;
+﻿using DataTransfer.Application.Contracts.Dtos.InputDtos;
+using DataTransfer.EntityFramework.Repositories.CrmRepositories;
 using DataTransfer.Infrastructure.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
@@ -27,21 +29,26 @@ namespace DataTransfer.Application.CrmServices
         {
             try
             {
-                var Nov = Convert.ToDateTime("2020-11-13");
+                var Nov = Convert.ToDateTime("2020-11-01");
                 ////筛选出目标班级
                 ////HttpHelper.PostAsync();
-                var targetClass = await _classCourseRepository
+                var targetClasses = await _classCourseRepository
                     .Include(e => e.Product)
                     .Where(e =>
                     e.Product.Prod_Type == 3
                     && e.Clas_BranID == 101005000
                     && e.Clas_Status == 1
                     && e.Clas_Deleted == 0
-                    && e.Clas_ActualBeginDate != null
+                    //&& e.Clas_ActualBeginDate != null
                     && e.Clas_ActualBeginDate > Nov
                     ).ToListAsync();
 
-                //var 
+                List<ClassDendMtsModel> clsses = new List<ClassDendMtsModel>();
+
+                foreach(var tc in targetClasses)
+                {
+                    
+                }
 
                 return "yes";
             }
@@ -51,6 +58,12 @@ namespace DataTransfer.Application.CrmServices
                 return "erro";
             }
             
+        }
+
+        private string GetProductLevelNameByClassCode(string code)
+        {
+            var a = code.Replace("FZ-LNCE", "").Substring(0, 1);
+            return a == "1" ? "NEW_NCE1" : "NEW_NCE4";
         }
 
         public async Task<string> SendStudentToMtsAsync()
