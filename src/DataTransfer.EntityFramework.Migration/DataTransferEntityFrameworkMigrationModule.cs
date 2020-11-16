@@ -16,7 +16,7 @@ namespace DataTransfer.EntityFramework.DbMigrations
             var configuration = context.Services.GetConfiguration();
             context.Services.AddDbContext<LocalMySqlMigrationDbContext>(options =>
             {
-                options.UseMySql(configuration.GetConnectionString("Default"), null);
+                options.UseMySql(configuration.GetConnectionString("LocalMysql"), null);
             });
         }
 

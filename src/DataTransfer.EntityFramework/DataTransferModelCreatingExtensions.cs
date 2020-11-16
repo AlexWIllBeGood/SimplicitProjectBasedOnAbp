@@ -1,5 +1,6 @@
 ﻿using DataTransfer.Domain.Entities.Coupan;
 using DataTransfer.Domain.Entities.CrmEntities;
+using DataTransfer.Domain.Entities.LocalEntities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,11 @@ namespace DataTransfer.EntityFramework
             builder.Entity<AddCoupan>(options=> {
                 options.ConfigureByConvention();
                 options.ToTable("AddCoupan");
+            });
+
+            builder.Entity<ProductRelation>(options => {
+                options.ConfigureByConvention();
+                options.ToTable("ProductRelation");
             });
         }
 

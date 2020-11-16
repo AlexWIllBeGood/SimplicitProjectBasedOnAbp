@@ -18,25 +18,33 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
 
             modelBuilder.Entity("DataTransfer.Domain.Entities.Coupan.AddCoupan", b =>
                 {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("AddCoupan");
+                });
+
+            modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.ProductRelation", b =>
+                {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("AddCount")
+                    b.Property<string>("NewProductName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OrderNO")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("StudentName")
+                    b.Property<string>("OriginalProductName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
-                    b.ToTable("AddCoupan");
+                    b.ToTable("ProductRelation");
                 });
 #pragma warning restore 612, 618
         }

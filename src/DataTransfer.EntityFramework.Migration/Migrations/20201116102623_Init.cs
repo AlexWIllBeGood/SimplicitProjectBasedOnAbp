@@ -11,16 +11,27 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                 name: "AddCoupan",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    OrderId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    OrderId = table.Column<int>(nullable: false),
-                    OrderNO = table.Column<string>(nullable: true),
-                    StudentName = table.Column<string>(nullable: true),
-                    AddCount = table.Column<string>(nullable: true)
+                    Count = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AddCoupan", x => x.Id);
+                    table.PrimaryKey("PK_AddCoupan", x => x.OrderId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductRelation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    OriginalProductName = table.Column<string>(nullable: true),
+                    NewProductName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductRelation", x => x.Id);
                 });
         }
 
@@ -28,6 +39,9 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AddCoupan");
+
+            migrationBuilder.DropTable(
+                name: "ProductRelation");
         }
     }
 }
