@@ -32,6 +32,8 @@ namespace DataTransfer.Application.CrmServices
     {
         public string ClassSendMTSUrl { get; set; }
         public string StudentSendMTSUrl { get; set; }
+        public string OrderSendMTSUrl { get; set; }
+        public string MTSPlatformKey { get; set; }
     }
     #endregion
 }

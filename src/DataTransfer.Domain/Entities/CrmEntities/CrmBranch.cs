@@ -102,7 +102,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 删除标志位
         /// </summary>
-        public int Bran_Deleted { get; set; }
+        public byte Bran_Deleted { get; set; }
 
         /// <summary>
         /// SapID

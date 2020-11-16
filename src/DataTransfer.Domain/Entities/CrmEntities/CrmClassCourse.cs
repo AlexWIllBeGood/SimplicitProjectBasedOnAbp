@@ -244,6 +244,13 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         public virtual CrmProduct Product { get; set; }
         [ForeignKey("Clas_BranID")]
         public virtual CrmBranch Branch { get; set; }
+        [ForeignKey("Clas_SA")]
+        public virtual CrmUser SA { get; set; }
+        [ForeignKey("Clas_FT")]
+        public virtual CrmUser FT { get; set; }
+        [ForeignKey("Clas_LT")]
+        public virtual CrmUser LT { get; set; }
+        public virtual ICollection<CrmClassStudent> ClassStudents { get; set; }
         #endregion
     }
 }

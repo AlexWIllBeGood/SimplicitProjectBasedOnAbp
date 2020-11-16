@@ -75,6 +75,12 @@ namespace DataTransfer.EntityFramework
                 options.ToTable("Basis_User");
             });
 
+            builder.Entity<CrmClassStudent>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("ClassStudent");
+            });
+            
         }
     }
 }

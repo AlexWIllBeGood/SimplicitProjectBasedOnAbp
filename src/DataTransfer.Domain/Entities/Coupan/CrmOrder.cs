@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataTransfer.Domain.Entities.CrmEntities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +9,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace DataTransfer.Domain.Entities.Coupan
 {
-    public class CrmOrder:IEntity<int>
+    public class CrmOrder : IEntity<int>
     {
         [Key]
         /// <summary>
@@ -175,12 +176,20 @@ namespace DataTransfer.Domain.Entities.Coupan
         /// </summary>
         public bool? Orde_IsPos { get; set; }
 
-        [NotMapped]      
+        [NotMapped]
         public int Id { get; set; }
 
         public object[] GetKeys()
         {
             throw new NotImplementedException();
         }
+
+        #region 导航属性
+        [ForeignKey("Orde_LeadID")]
+        public virtual CrmLead Lead { get; set; }
+        public virtual ICollection<CrmContract> Contracts { get; set; }
+        [ForeignKey("Orde_OrderCC")]
+        public virtual CrmUser CC { get; set; }
+        #endregion
     }
 }

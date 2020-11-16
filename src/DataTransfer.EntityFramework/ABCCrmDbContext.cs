@@ -22,7 +22,7 @@ namespace DataTransfer.EntityFramework
         public DbSet<CrmLead> CrmLeads { get; set; }
         public DbSet<CrmProductLevel> CrmProductLevels { get; set; }
         public DbSet<CrmUser> CrmUsers { get; set; }
-
+        public DbSet<CrmClassStudent> CrmClassStudents { get; set; }
         public ABCCrmDbContext(DbContextOptions<ABCCrmDbContext> options) : base(options)
         {
 

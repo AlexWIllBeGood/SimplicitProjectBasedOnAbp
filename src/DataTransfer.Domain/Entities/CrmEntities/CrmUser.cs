@@ -66,7 +66,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 删除
         /// </summary>
-        public int User_Deleted { get; set; }
+        public byte User_Deleted { get; set; }
 
         /// <summary>
         /// 电话

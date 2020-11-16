@@ -162,6 +162,5 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// </summary>
         //[NPoco.Ignore]
         //public decimal Prod_Price { get; set; }
-
     }
 }

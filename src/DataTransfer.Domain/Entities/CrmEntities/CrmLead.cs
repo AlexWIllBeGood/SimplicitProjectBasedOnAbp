@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataTransfer.Domain.Entities.Coupan;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -45,7 +46,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 是否添加微信
         /// </summary>
-        public bool Lead_IsAddWeiXin { get; set; }
+        public bool? Lead_IsAddWeiXin { get; set; }
 
         /// <summary>
         /// 微信号码
@@ -108,12 +109,12 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 创建人
         /// </summary>
-        public int Lead_CreatedBy { get; set; }
+        public int? Lead_CreatedBy { get; set; }
 
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime Lead_CreatedDate { get; set; }
+        public DateTime? Lead_CreatedDate { get; set; }
 
         /// <summary>
         /// 更新人
@@ -128,7 +129,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 
         /// </summary>
-        public int Lead_Deleted { get; set; }
+        public int? Lead_Deleted { get; set; }
 
         /// <summary>
         /// lead身份
@@ -462,7 +463,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 中心ID
         /// </summary>
-        public int Lead_BranID { get; set; }
+        public int? Lead_BranID { get; set; }
 
         /// <summary>
         /// 组ID
@@ -492,7 +493,8 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 报备老师
         /// </summary>
-        public int? Lead_ReportedTeacher { get; set; }
+        /// 数据库类型错误
+        public string Lead_ReportedTeacher { get; set; }
 
         /// <summary>
         /// 更新人姓名
@@ -522,7 +524,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 系统来源（0CRM 1www库，2crm库,3WEBAPI）
         /// </summary>
-        public int Lead_SystemChannel { get; set; }
+        public int? Lead_SystemChannel { get; set; }
 
         /// <summary>
         /// 覆盖时间
@@ -923,5 +925,16 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// </summary>
         //[NPoco.Ignore]
         //public string CAStatus { get; set; }
+
+        #region 导航属性
+        [ForeignKey("Lead_BranID")]
+        public virtual CrmBranch Branch { get; set; }
+        [ForeignKey("Lead_Sa")]
+        public virtual CrmUser SA { get; set; }
+        //[ForeignKey("Lead_LeadID")]
+        public virtual ICollection<CrmContract> Contracts { get; set; }
+        //[ForeignKey("Lead_LeadID")]
+        public virtual ICollection<CrmOrder> Orders { get; set; }
+        #endregion
     }
 }

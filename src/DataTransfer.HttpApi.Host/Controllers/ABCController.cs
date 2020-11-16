@@ -28,8 +28,8 @@ namespace DataTransfer.HttpApi.Host.Controllers
         [HttpGet]
         public async Task<string> AddCoupan()
         {
-            //return await _coupanService.AddCoupanAsync();
-            return await _classService.SendClassToMtsAsync();
+            //return await _classService.SendClassToMtsAsync();
+            return await _classService.SendStudentToMtsAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataTransfer.Domain.Entities.Coupan;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,7 +13,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
     /// </summary>
     //[NPoco.TableName("Contract")]
     //[NPoco.PrimaryKey("cont_ContractId", AutoIncrement = true)]
-    public class CrmContract:IEntity<int>
+    public class CrmContract : IEntity<int>
     {
         [Key]
         /// <summary>
@@ -155,7 +156,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 产品单价
         /// </summary>
-        public decimal Cont_ProductAmount { get; set; }
+        public int Cont_ProductAmount { get; set; }
 
         /// <summary>
         /// 产品金额
@@ -342,6 +343,15 @@ namespace DataTransfer.Domain.Entities.CrmEntities
             throw new NotImplementedException();
         }
 
+        #endregion
+
+        #region 导航属性
+        [ForeignKey("Cont_LeadId")]
+        public virtual CrmLead Lead { get; set; }
+        [ForeignKey("Cont_ProductID")]
+        public virtual CrmProduct Product { get; set; }
+        [ForeignKey("Cont_OrderID")]
+        public virtual CrmOrder Order { get; set; }
         #endregion
     }
 }
