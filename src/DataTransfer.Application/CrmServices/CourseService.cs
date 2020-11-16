@@ -1,6 +1,5 @@
 ﻿using DataTransfer.Application.Contracts.Dtos.InputDtos;
 using DataTransfer.EntityFramework.Repositories.CrmRepositories;
-using DataTransfer.Infrastructure.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
@@ -43,12 +42,12 @@ namespace DataTransfer.Application.CrmServices
                     && e.Clas_ActualBeginDate > Nov
                     ).ToListAsync();
 
-                List<ClassDendMtsModel> clsses = new List<ClassDendMtsModel>();
+                List<ClassSendMtsModel> clsses = new List<ClassSendMtsModel>();
 
                 foreach(var tc in targetClasses)
                 {
-                    clsses.Add(new ClassDendMtsModel() {
-                        SchoolId=
+                    clsses.Add(new ClassSendMtsModel() {
+                        //SchoolId=
                     });
                 }
 

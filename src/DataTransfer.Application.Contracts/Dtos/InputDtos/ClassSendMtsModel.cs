@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DataTransfer.Application.Contracts.Dtos.InputDtos
 {
-    public class ClassDendMtsModel
+    public class ClassSendMtsModel
     {
         public string PlatfromKey { get; set; } = "0ca10fdbfc994b6dea8af3c9ea751dd9";
         public bool? IsDTClass { get; set; } = false;
