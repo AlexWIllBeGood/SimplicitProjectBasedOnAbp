@@ -3,7 +3,7 @@
     "DataTransfer.HttpApi.Host": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/ABC/AddCoupan",
+      //"launchUrl": "api/ABC/AddCoupan",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

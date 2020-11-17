@@ -5,6 +5,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="3.3.1" />
   </ItemGroup>
 
@@ -21,8 +22,18 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DataTransfer.HttpApi.Host.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\Administrator\Desktop\DataTransfer\src\DataTransfer.HttpApi.Host\DataTransfer.HttpApi.Host.xml</DocumentationFile>
   </PropertyGroup>
 
 

@@ -24,7 +24,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 订单ID
         /// </summary>
-        public int Cont_OrderID { get; set; }
+        public int? Cont_OrderID { get; set; }
 
         /// <summary>
         /// 合同号
@@ -34,12 +34,12 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 学员ID
         /// </summary>
-        public int Cont_LeadId { get; set; }
+        public int? Cont_LeadId { get; set; }
 
         /// <summary>
         /// 签单中心
         /// </summary>
-        public int Cont_BranchID { get; set; }
+        public int? Cont_BranchID { get; set; }
 
         /// <summary>
         /// 中心名称
@@ -60,12 +60,12 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 产品大类
         /// </summary>
-        public int Cont_ProductType { get; set; }
+        public int? Cont_ProductType { get; set; }
 
         /// <summary>
         /// 产品ID
         /// </summary>
-        public int Cont_ProductID { get; set; }
+        public int? Cont_ProductID { get; set; }
 
         /// <summary>
         /// 产品等级id ,隔开
@@ -81,7 +81,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 排课期数
         /// </summary>
-        public int Cont_Period { get; set; }
+        public int? Cont_Period { get; set; }
 
         /// <summary>
         /// 签订时间
@@ -91,7 +91,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 签单CC
         /// </summary>
-        public int Cont_Sales { get; set; }
+        public int? Cont_Sales { get; set; }
 
         /// <summary>
         /// 签单CC
@@ -102,7 +102,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 服务SA
         /// </summary>
-        public int Cont_Sa { get; set; }
+        public int? Cont_Sa { get; set; }
 
         /// <summary>
         /// 服务SA
@@ -113,7 +113,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 合同状态0	收银待收全款；-1	收银驳回；1	待签电子合同；2	合同执行中；3	合同完结；4退费完结；5转班完结
         /// </summary>
-        public int Cont_Status { get; set; }
+        public int? Cont_Status { get; set; }
 
         /// <summary>
         /// 合同状态
@@ -134,39 +134,39 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 学员班型总课时关联ID
         /// </summary>
-        public int Cont_StuClassID { get; set; }
+        public int? Cont_StuClassID { get; set; }
 
         /// <summary>
         /// 产品code （立刻说使用）
         /// </summary>
-        public string Cont_ProductCode { get; set; }
+        public string? Cont_ProductCode { get; set; }
 
         /// <summary>
         /// 立刻说合同状态
         /// </summary>
-        public int Cont_LksStatus { get; set; }
+        public int? Cont_LksStatus { get; set; }
 
         /// <summary>
         /// 主体ID
         /// </summary>
-        public int Cont_OrgCodeID { get; set; }
+        public int? Cont_OrgCodeID { get; set; }
 
         #region 金额课时
 
         /// <summary>
         /// 产品单价
         /// </summary>
-        public int Cont_ProductAmount { get; set; }
+        public int? Cont_ProductAmount { get; set; }
 
         /// <summary>
         /// 产品金额
         /// </summary>
-        public decimal Cont_Amount { get; set; }
+        public decimal? Cont_Amount { get; set; }
 
         /// <summary>
         /// 应收金额
         /// </summary>
-        public decimal Cont_AccountReceivable { get; set; }
+        public decimal? Cont_AccountReceivable { get; set; }
 
         /// <summary>
         /// 应收占订单总应收比例
@@ -177,7 +177,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 实收金额
         /// </summary>
-        public decimal Cont_CashReceived { get; set; }
+        public decimal? Cont_CashReceived { get; set; }
 
         /// <summary>
         /// 业绩金额
@@ -195,7 +195,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 折扣率
         /// </summary>
-        public decimal Cont_DiscountRate { get; set; }
+        public decimal? Cont_DiscountRate { get; set; }
 
         /// <summary>
         /// 满减金额
@@ -224,7 +224,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 产品售卖类型
         /// </summary>
-        public int Cont_ProductSellType { get; set; }
+        public int? Cont_ProductSellType { get; set; }
 
         //[NPoco.Ignore]
         //public string Cont_ProductSellType_Name { get; set; }
@@ -232,19 +232,19 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 合同类别 0为订单，1为正式合同
         /// </summary>
-        public int Cont_Category { get; set; }
+        public int? Cont_Category { get; set; }
 
         /// <summary>
         /// 备注
         /// </summary>
-        public string Cont_Remark { get; set; }
+        public string? Cont_Remark { get; set; }
 
-        public int Cont_Type { get; set; }
+        public int? Cont_Type { get; set; }
 
         //[NPoco.Ignore]
         //public string Cont_Type_Name { get; set; }
 
-        public int Cont_FamilyId { get; set; }
+        public int? Cont_FamilyId { get; set; }
 
         //[NPoco.Ignore]
         //public string Cont_Family_Name { get; set; }
@@ -265,7 +265,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 剩余课时
         /// </summary>
-        public int Cont_RestClassHour { get; set; }
+        public int? Cont_RestClassHour { get; set; }
 
         public int? Cont_RefundStatus { get; set; }
 
@@ -304,7 +304,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 是否补差价合同0否，1是
         /// </summary>
-        public int Cont_IsDiff { get; set; }
+        public int? Cont_IsDiff { get; set; }
 
         /// <summary>
         /// 费用状态（老系统字段）
@@ -314,7 +314,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 购买数量
         /// </summary>
-        public int Cont_SalesNum { get; set; }
+        public int? Cont_SalesNum { get; set; }
 
         public int? Cont_CreatedBy { get; set; }
 
@@ -333,7 +333,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 删除标志位
         /// </summary>
-        public int Cont_Deleted { get; set; }
+        public int? Cont_Deleted { get; set; }
 
         [NotMapped]
         public int Id { get; set; }
@@ -352,6 +352,8 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         public virtual CrmProduct Product { get; set; }
         [ForeignKey("Cont_OrderID")]
         public virtual CrmOrder Order { get; set; }
+        [ForeignKey("Cont_ClassId")]
+        public virtual CrmClassCourse ClassCourse { get; set; }
         #endregion
     }
 }

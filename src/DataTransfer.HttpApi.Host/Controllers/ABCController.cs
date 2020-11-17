@@ -29,7 +29,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
         public async Task<string> AddCoupan()
         {
             //return await _classService.SendClassToMtsAsync();
-            return await _classService.SendStudentToMtsAsync();
+            return await _classService.SendStudentToMtsAsync1();
         }
     }
 }
