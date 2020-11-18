@@ -4,5 +4,16 @@
         <name>DataTransfer.HttpApi.Host</name>
     </assembly>
     <members>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendClassToMtsAsync">
+            <summary>
+            发送班级信息到MTS
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendStudentToMtsAsync">
+            <summary>
+            发送学生信息到MTS
+            </summary>
+        </member>
     </members>
 </doc>
