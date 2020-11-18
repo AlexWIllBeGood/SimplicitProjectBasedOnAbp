@@ -24,12 +24,22 @@ namespace DataTransfer.HttpApi.Host.Controllers
             this._coupanService = coupanService;
             this._classService = classService;
         }
-
-        [HttpGet]
-        public async Task<string> AddCoupan()
+        /// <summary>
+        /// 发送班级信息到MTS
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<string> SendClassToMtsAsync()
         {
-            //return await _classService.SendClassToMtsAsync();
-            return await _classService.SendStudentToMtsAsync1();
+            return await _classService.SendClassToMtsAsync();
+        }
+        /// <summary>
+        /// 发送学生信息到MTS
+        /// </summary>
+        [HttpPost]
+        public async Task<string> SendStudentToMtsAsync()
+        {
+            return await _classService.SendStudentToMtsAsync();
         }
     }
 }

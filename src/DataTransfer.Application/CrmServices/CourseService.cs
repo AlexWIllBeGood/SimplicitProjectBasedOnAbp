@@ -79,10 +79,11 @@ namespace DataTransfer.Application.CrmServices
             List<ClassSendMtsModel> clsses = new List<ClassSendMtsModel>();
             foreach (var tc in targetClasses)
             {
+                var product = await GetNewProductByOriginProductAsync(tc.Product);
                 var model = new ClassSendMtsModel();
                 model.SchoolId = tc.Branch.Bran_SapId;
-                model.ProductId = tc.Product.Prod_Type;
-                model.ClassTypeId = tc.Product.Prod_SubTypeID;
+                model.ProductId = product.Prod_Type;
+                model.ClassTypeId = product.Prod_SubTypeID;
                 model.ProductLevelId = GetProductLevelNameByClassCode(tc.Clas_Code) ?? "";
                 model.ClassCName = tc.Clas_Code;
                 //model.SAId = tc.SA?.User_Logon ?? "jennifer_jy";
@@ -95,7 +96,7 @@ namespace DataTransfer.Application.CrmServices
                 //model.FTId = tc.FT?.User_Logon;
                 //model.HasLT = tc.LT != null;
                 //model.LTId = tc.LT?.User_Logon;
-                model.ClassOpenDate = tc.Clas_ActualBeginDate?.ToString("yy-MM-dd");
+                model.ClassOpenDate = tc.Clas_ActualBeginDate?.ToString("yyyy-MM-dd");
                 //处理上课时间的内容
                 List<SimpleClassSchedule> scss = new List<SimpleClassSchedule>();
                 scss = JsonConvert.DeserializeObject<List<SimpleClassSchedule>>(tc.Clas_Schedule);
@@ -118,7 +119,11 @@ namespace DataTransfer.Application.CrmServices
 
             return $"Class Trasfer info:Total:{clsses.Count} Success:{successCount} Fail:{clsses.Count - successCount}";
         }
-        public async Task<string> SendStudentToMtsAsync1()
+        /// <summary>
+        /// 发送学生合同信息到MTS
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> SendStudentToMtsAsync()
         {
             try
             {
@@ -239,7 +244,8 @@ namespace DataTransfer.Application.CrmServices
                 throw;
             }
         }
-        public async Task<string> SendStudentToMtsAsync()
+        [Obsolete]
+        public async Task<string> SendStudentToMtsAsyncOld()
         {
             try
             {
