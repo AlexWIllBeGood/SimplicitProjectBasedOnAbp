@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DataTransfer.Domain.Entities.Temp
 {
-    public class MTSResponseEntity
+    public abstract class MTSResponseBaseEntity
     {
         /// <summary>
         /// 状态码
@@ -17,6 +17,6 @@ namespace DataTransfer.Domain.Entities.Temp
         ///// <summary>
         ///// 返回结果
         ///// </summary>
-        public string ResultData { get; set; }
+        public virtual string ResultData { get; set; }
     }
 }

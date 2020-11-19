@@ -13,8 +13,8 @@ namespace DataTransfer.EntityFramework
     [ConnectionStringName("LocalMysql")]
     public class LocalMySqlDbContext : AbpDbContext<LocalMySqlDbContext>
     {
-        public DbSet<AddCoupan> AddCoupans { get; set; }
         public DbSet<ProductRelation> ProductRelations { get; set; }
+        public DbSet<ClassRelation> ClassRelations { get; set; }
         public LocalMySqlDbContext(DbContextOptions<LocalMySqlDbContext> options) : base(options)
         {
 

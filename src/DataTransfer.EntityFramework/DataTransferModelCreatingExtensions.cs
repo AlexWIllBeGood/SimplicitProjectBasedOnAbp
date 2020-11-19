@@ -22,6 +22,11 @@ namespace DataTransfer.EntityFramework
                 options.ConfigureByConvention();
                 options.ToTable("ProductRelation");
             });
+
+            builder.Entity<ClassRelation>(options => {
+                options.ConfigureByConvention();
+                options.ToTable("ClassRelation");
+            });
         }
 
         public static void ConfigureCrm(this ModelBuilder builder)

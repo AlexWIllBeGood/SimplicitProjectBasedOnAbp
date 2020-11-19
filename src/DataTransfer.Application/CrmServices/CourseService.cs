@@ -1,5 +1,6 @@
 ﻿using DataTransfer.Application.Contracts.Dtos.InputDtos;
 using DataTransfer.Domain.Entities.CrmEntities;
+using DataTransfer.Domain.Entities.LocalEntities;
 using DataTransfer.Domain.Entities.Temp;
 using DataTransfer.EntityFramework.Repositories;
 using DataTransfer.EntityFramework.Repositories.CrmRepositories;
@@ -26,6 +27,7 @@ namespace DataTransfer.Application.CrmServices
         private readonly ProductRepository _productRepository;
         private readonly ProductRelationRepository _productRelationRepository;
         private readonly ContractRepository _contractRepository;
+        private readonly ClassRelationRepository _classRelationRepository;
         public CourseService(
             IOptionsMonitor<CRMOptions> classOptions,
             ClassCourseRepository classCourseRepository,
@@ -33,7 +35,8 @@ namespace DataTransfer.Application.CrmServices
             LeadRepository leadRepository,
             ContractRepository contractRepository,
             ProductRepository productRepository,
-            ProductRelationRepository productRelationRepository
+            ProductRelationRepository productRelationRepository,
+            ClassRelationRepository classRelationRepository
             )
         {
             this._classOptions = classOptions;
@@ -43,6 +46,7 @@ namespace DataTransfer.Application.CrmServices
             this._contractRepository = contractRepository;
             this._productRepository = productRepository;
             this._productRelationRepository = productRelationRepository;
+            this._classRelationRepository = classRelationRepository;
         }
 
         /// <summary>
@@ -55,10 +59,10 @@ namespace DataTransfer.Application.CrmServices
             var targetClasses = await _classCourseRepository
                 .Include(e => e.Product)
                 .Include(e => e.Branch)
-                .Include(e=>e.SA)
-                .Include(e=>e.LT)
-                .Include(e=>e.FT)
-                .Include(e=>e.ClassStudents)
+                .Include(e => e.SA)
+                .Include(e => e.LT)
+                .Include(e => e.FT)
+                .Include(e => e.ClassStudents)
                 .Where(e =>
                 e.Product.Prod_Type == 3
                 && e.Clas_BranID == 101005000
@@ -100,7 +104,7 @@ namespace DataTransfer.Application.CrmServices
                 //处理上课时间的内容
                 List<SimpleClassSchedule> scss = new List<SimpleClassSchedule>();
                 scss = JsonConvert.DeserializeObject<List<SimpleClassSchedule>>(tc.Clas_Schedule);
-                    StringBuilder scheduleBuilder = new StringBuilder();
+                StringBuilder scheduleBuilder = new StringBuilder();
                 foreach (var scs in scss)
                 {
                     scheduleBuilder.Append($"{scs.Week}*{scs.BeginTime}*{scs.EndTime}&");
@@ -112,11 +116,20 @@ namespace DataTransfer.Application.CrmServices
 
             foreach (var c in clsses)
             {
-                var response = HttpHelper.PostAsync<MTSResponseEntity>(_classOptions.CurrentValue.ClassSendMTSUrl, c);
-                if (response.ResultCode == "000000")
+                var response = HttpHelper.PostAsync<ClassMRTSResponseEntity>(_classOptions.CurrentValue.ClassSendMTSUrl, c);
+                if (response.ResultCode == "000000"
+                    || response.ResultData == "100002")
+                {
                     successCount++;
+                    //保存classRelation的关系
+                    var crmClassId = targetClasses.FirstOrDefault(e => e.Clas_Code == c.ClassCName)?.Clas_ID;
+                    await _classRelationRepository.InsertAsync(new ClassRelation()
+                    {
+                        CrmClassId = crmClassId,
+                        MTSClassId = response.MTSClassId
+                    });
+                }
             }
-
             return $"Class Trasfer info:Total:{clsses.Count} Success:{successCount} Fail:{clsses.Count - successCount}";
         }
         /// <summary>
@@ -153,7 +166,11 @@ namespace DataTransfer.Application.CrmServices
                     && e.Cont_OrderID != null
                     )
                     .ToList();
-
+                //根据合同获取所有相关的班级对应信息
+                var allCrmClassIds = allContracts.Select(e => e.Cont_ClassId).Distinct();
+                var allClassRelations = _classRelationRepository
+                    .Where(e => allCrmClassIds.Contains(e.CrmClassId))
+                    .ToList();
                 //将相关合同按照签约人，产品，订单划分
                 var contractGroups = allContracts
                     .GroupBy(e => new { e.Cont_LeadId, e.Cont_ProductID, e.Cont_OrderID })
@@ -222,7 +239,7 @@ namespace DataTransfer.Application.CrmServices
                     model.Cont_reason = null;
                     model.Cont_RefundAmount = 0;
                     model.ccUserName = cc?.User_Logon;
-                    model.classId = contract.Cont_ClassId;
+                    model.classId = allClassRelations.FirstOrDefault(e => e.CrmClassId == contract.Cont_ClassId)?.MTSClassId;
                     model.levelCodes = beginLevel;
                     model.currLevelCodes = beginLevel;
                     model.contractTypeSub = product.Prod_SubTypeID;
@@ -231,7 +248,7 @@ namespace DataTransfer.Application.CrmServices
                 var successCount = 0;
                 foreach (var m in models)
                 {
-                    var response = HttpHelper.PostAsync<MTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
+                    var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
                     if (response.ResultCode == "000000")
                         successCount++;
                 }
@@ -333,7 +350,7 @@ namespace DataTransfer.Application.CrmServices
                 var successCount = 0;
                 foreach (var m in models)
                 {
-                    var response = HttpHelper.PostAsync<MTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
+                    var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
                     if (response.ResultCode == "000000")
                         successCount++;
                 }
