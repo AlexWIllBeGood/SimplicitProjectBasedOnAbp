@@ -117,8 +117,8 @@ namespace DataTransfer.Application.CrmServices
             foreach (var c in clsses)
             {
                 var response = HttpHelper.PostAsync<ClassMRTSResponseEntity>(_classOptions.CurrentValue.ClassSendMTSUrl, c);
-                if (response.ResultCode == "000000"
-                    || response.ResultData == "100002")
+                if (response.ResultCode == "100000"
+                    || response.ResultCode == "100002")
                 {
                     successCount++;
                     //保存classRelation的关系
