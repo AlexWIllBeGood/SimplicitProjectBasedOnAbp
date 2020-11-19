@@ -123,11 +123,20 @@ namespace DataTransfer.Application.CrmServices
                     successCount++;
                     //保存classRelation的关系
                     var crmClassId = targetClasses.FirstOrDefault(e => e.Clas_Code == c.ClassCName)?.Clas_ID;
-                    await _classRelationRepository.InsertAsync(new ClassRelation()
+                    var existClassRelation = await _classRelationRepository.FirstOrDefaultAsync(e => e.CrmClassId == crmClassId);
+                    if (existClassRelation != null)
                     {
-                        CrmClassId = crmClassId,
-                        MTSClassId = response.MTSClassId
-                    });
+                        existClassRelation.MTSClassId = response.MTSClassId;
+                        await _classRelationRepository.UpdateAsync(existClassRelation);
+                    }
+                    else
+                    {
+                        await _classRelationRepository.InsertAsync(new ClassRelation()
+                        {
+                            CrmClassId = crmClassId,
+                            MTSClassId = response.MTSClassId
+                        });
+                    }
                 }
             }
             return $"Class Trasfer info:Total:{clsses.Count} Success:{successCount} Fail:{clsses.Count - successCount}";
