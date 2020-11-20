@@ -27,6 +27,16 @@ namespace DataTransfer.EntityFramework
                 options.ConfigureByConvention();
                 options.ToTable("ClassRelation");
             });
+
+            builder.Entity<TransferLog>(options => {
+                options.ConfigureByConvention();
+                options.ToTable("TransferLog");
+            });
+
+            builder.Entity<ClassTeacher>(options => {
+                options.ConfigureByConvention();
+                options.ToTable("ClassTeacher");
+            });
         }
 
         public static void ConfigureCrm(this ModelBuilder builder)

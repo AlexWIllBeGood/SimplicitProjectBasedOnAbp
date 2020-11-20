@@ -41,5 +41,14 @@ namespace DataTransfer.HttpApi.Host.Controllers
         {
             return await _classService.SendStudentToMtsAsync();
         }
+        /// <summary>
+        /// 添加中教师信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<string> AddTeacherNameAsync()
+        {
+            return await _classService.AddTeacherNameAsync();
+        }
     }
 }

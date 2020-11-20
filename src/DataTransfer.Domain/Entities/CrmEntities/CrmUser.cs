@@ -214,5 +214,10 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         {
             throw new NotImplementedException();
         }
+
+        #region 导航属性
+        [ForeignKey("User_PrimaryTerritory")]
+        public virtual CrmBranch Branch { get; set; }
+        #endregion
     }
 }

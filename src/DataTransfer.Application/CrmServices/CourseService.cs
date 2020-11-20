@@ -1,7 +1,9 @@
 ﻿using DataTransfer.Application.Contracts.Dtos.InputDtos;
+using DataTransfer.Domain;
 using DataTransfer.Domain.Entities.CrmEntities;
 using DataTransfer.Domain.Entities.LocalEntities;
 using DataTransfer.Domain.Entities.Temp;
+using DataTransfer.Domain.Shared.Enums;
 using DataTransfer.EntityFramework.Repositories;
 using DataTransfer.EntityFramework.Repositories.CrmRepositories;
 using DataTransfer.Infrastructure.Utils;
@@ -28,6 +30,10 @@ namespace DataTransfer.Application.CrmServices
         private readonly ProductRelationRepository _productRelationRepository;
         private readonly ContractRepository _contractRepository;
         private readonly ClassRelationRepository _classRelationRepository;
+        private readonly TransferLogRepository _transferLogRepository;
+        private readonly ClassTeacherRepository _classTeacherRepository;
+        private readonly UserRepository _userRepository;
+        private readonly BranchRepository _branchRepository;
         public CourseService(
             IOptionsMonitor<CRMOptions> classOptions,
             ClassCourseRepository classCourseRepository,
@@ -36,7 +42,11 @@ namespace DataTransfer.Application.CrmServices
             ContractRepository contractRepository,
             ProductRepository productRepository,
             ProductRelationRepository productRelationRepository,
-            ClassRelationRepository classRelationRepository
+            ClassRelationRepository classRelationRepository,
+            TransferLogRepository transferLogRepository,
+            ClassTeacherRepository classTeacherRepository,
+            UserRepository userRepository,
+            BranchRepository branchRepository
             )
         {
             this._classOptions = classOptions;
@@ -47,8 +57,11 @@ namespace DataTransfer.Application.CrmServices
             this._productRepository = productRepository;
             this._productRelationRepository = productRelationRepository;
             this._classRelationRepository = classRelationRepository;
+            this._transferLogRepository = transferLogRepository;
+            this._classTeacherRepository = classTeacherRepository;
+            this._userRepository = userRepository;
+            this._branchRepository = branchRepository;
         }
-
         /// <summary>
         /// 发送班级数据到MTS
         /// </summary>
@@ -114,6 +127,8 @@ namespace DataTransfer.Application.CrmServices
             }
             int successCount = 0;
 
+            DateTime now = DateTime.Now;
+            string batchNo = $"{DataTransferConst.ClassTransferNo}{now.ToString("yyyyMMddHHmmss")}";
             foreach (var c in clsses)
             {
                 var response = HttpHelper.PostAsync<ClassMRTSResponseEntity>(_classOptions.CurrentValue.ClassSendMTSUrl, c);
@@ -138,6 +153,16 @@ namespace DataTransfer.Application.CrmServices
                         });
                     }
                 }
+
+                //保存日志
+                await _transferLogRepository.InsertAsync(new TransferLog()
+                {
+                    BatchNo = batchNo,
+                    Para = JsonConvert.SerializeObject(c),
+                    Response = JsonConvert.SerializeObject(response),
+                    Type = TransferLogType.Class,
+                    CreateTime = DateTime.Now
+                });
             }
             return $"Class Trasfer info:Total:{clsses.Count} Success:{successCount} Fail:{clsses.Count - successCount}";
         }
@@ -165,7 +190,7 @@ namespace DataTransfer.Application.CrmServices
                     .Include(e => e.ClassCourse)
                     .Include(e => e.Product)
                     .Include(e => e.Lead)
-                    .ThenInclude(e=>e.Branch)
+                    .ThenInclude(e => e.Branch)
                     .Include(e => e.Order)
                     .ThenInclude(e => e.CC)
                     .Where(e => classIds.Contains((int)e.Cont_ClassId)
@@ -181,30 +206,36 @@ namespace DataTransfer.Application.CrmServices
                     .Where(e => allCrmClassIds.Contains(e.CrmClassId))
                     .ToList();
                 //将相关合同按照签约人，产品，订单划分
+                //按照班级（产品去进行分组，实际上一个班级只会有一个产品）
                 var contractGroups = allContracts
-                    .GroupBy(e => new { e.Cont_LeadId, e.Cont_ProductID, e.Cont_OrderID })
+                    .GroupBy(e => new { e.Cont_LeadId, e.Cont_ProductID, e.Cont_ClassId })
                     .Select(e => new
                     {
                         e.Key.Cont_LeadId,
                         e.Key.Cont_ProductID,
-                        e.Key.Cont_OrderID,
+                        e.Key.Cont_ClassId,
                         Count = e.Count()
                     })
                     .ToList();
-
+                //var target = contractGroups.Where(e => e.Cont_LeadId == 296).ToList();
                 List<CrmStudentInfoModel> models = new List<CrmStudentInfoModel>();
                 foreach (var cg in contractGroups)
                 {
                     var contracts = allContracts
                         .Where(e => e.Cont_LeadId == cg.Cont_LeadId
                         && e.Cont_ProductID == cg.Cont_ProductID
-                        && e.Cont_OrderID == cg.Cont_OrderID)
+                        && e.Cont_ClassId == cg.Cont_ClassId)
                         .OrderBy(e => e.Cont_CreatedDate)
                         .ToList();
 
                     var contract = contracts.FirstOrDefault();
                     var order = contract.Order;
                     var lead = contract.Lead;
+
+                    if (lead.Lead_Name == "曹诗琪")
+                    {
+                        var a = 1;
+                    }
                     var classCourse = contract.ClassCourse;
                     var cc = order.CC;
                     var branch = lead.Branch;
@@ -213,8 +244,8 @@ namespace DataTransfer.Application.CrmServices
                     var beginLevel = productLevels[0];
                     var endLevel = productLevels[productLevels.Count - 1];
                     //合同开始时间为当前时间，结束时间根据等级数量去进行估算
-                    DateTime contractBeginTime = DateTime.Now;
-                    DateTime contractEndTime = DateTime.Now.AddMonths((int)6 * productLevels.Count());
+                    DateTime contractBeginTime = contract?.Cont_BegDate ?? DateTime.Now;
+                    DateTime contractEndTime = contractBeginTime.AddMonths((int)6 * productLevels.Count());
 
                     CrmStudentInfoModel model = new CrmStudentInfoModel();
                     model.platfromKey = _classOptions.CurrentValue.MTSPlatformKey;
@@ -233,8 +264,8 @@ namespace DataTransfer.Application.CrmServices
                     model.cont_isbinding = null;
                     model.contractType = product.Prod_Type.ToString();
                     model.contractBranchId = branch?.Bran_SapId.ToString();
-                    model.contBeginDate = contract?.Cont_BegDate ?? contractBeginTime;
-                    model.contEndDate = contract?.Cont_EndDate ?? contractEndTime;
+                    model.contBeginDate = contractBeginTime;
+                    model.contEndDate = contractEndTime;
                     model.contStatus = "02"; //02 执行、03冻结、06结束、01结束
                     model.productId = product?.Prod_ID;
                     model.productType = product.Prod_Type;
@@ -249,20 +280,34 @@ namespace DataTransfer.Application.CrmServices
                     model.Cont_RefundAmount = 0;
                     model.ccUserName = cc?.User_Logon;
                     model.classId = allClassRelations.FirstOrDefault(e => e.CrmClassId == contract.Cont_ClassId)?.MTSClassId;
-                    model.levelCodes = beginLevel;
+                    model.levelCodes = string.Join(",", productLevels);
                     model.currLevelCodes = beginLevel;
                     model.contractTypeSub = product.Prod_SubTypeID;
                     models.Add(model);
                 }
                 var successCount = 0;
+
+
+                DateTime now = DateTime.Now;
+                string batchNo = $"{DataTransferConst.StudentTransferNo}{now.ToString("yyyyMMddHHmmss")}";
                 foreach (var m in models)
                 {
                     var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
                     if (response.ResultCode == "000000")
                         successCount++;
+
+                    //保存日志
+                    await _transferLogRepository.InsertAsync(new TransferLog()
+                    {
+                        BatchNo = batchNo,
+                        Para = JsonConvert.SerializeObject(m),
+                        Response = JsonConvert.SerializeObject(response),
+                        Type = TransferLogType.Student,
+                        CreateTime = DateTime.Now
+                    });
                 }
 
-                return $"Class Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
+                return $"Student Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
 
             }
             catch (Exception ex)
@@ -270,108 +315,63 @@ namespace DataTransfer.Application.CrmServices
                 throw;
             }
         }
-        [Obsolete]
-        public async Task<string> SendStudentToMtsAsyncOld()
+        /// <summary>
+        /// 添加教师名称
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> AddTeacherNameAsync()
         {
             try
             {
-                var Nov = Convert.ToDateTime("2020-11-01");
-                var targetClasses = await _classCourseRepository
-                    .Include(e => e.Product)
-                    .Include(e => e.Branch)
-                    .Include(e => e.ClassStudents)
-                    .Where(e =>
-                    e.Product.Prod_Type == 3
-                    && e.Clas_BranID == 101005000
-                    && e.Clas_Status == 1
-                    && e.Clas_Deleted == 0
-                    && e.Clas_ActualBeginDate > Nov
-                    ).ToListAsync();
-                var classStudents = targetClasses.SelectMany(e => e.ClassStudents).ToList();
-                var leadIds = classStudents.Select(e => e.Clst_LeadID).Distinct().ToList();
-
-                var leads = await _leadRepository
-                    .Include(e => e.Branch)
-                    .Include(e => e.Orders)
-                    .Include(e => e.Contracts)
-                    .ThenInclude(e => e.Product)
-                    .Where(e => leadIds.Contains(e.Lead_LeadID))
-                    .ToListAsync();
-
-                List<CrmStudentInfoModel> models = new List<CrmStudentInfoModel>();
-                foreach (var lead in leads)
+                var classTeachers = await _classTeacherRepository.GetListAsync();
+                //List<string> branchNames = await _classTeacherRepository.Select(e => e.BranchName).Distinct().ToListAsync();
+                List<string> bcodes = new List<string>();
+                List<string> tcodes = new List<string>();
+                List<string> ccodes = new List<string>();
+                foreach (var ct in classTeachers)
                 {
-                    //区分不同的产品
-                    var products = lead.Contracts.Select(e => e.Product).Distinct().ToList();
-                    foreach (var product in products)
-                    {
-                        var contract = lead.Contracts.Where(e => e.Cont_ProductID == product.Prod_ID).OrderBy(e => e.Cont_CreatedDate).FirstOrDefault();
-                        var order = contract.Order;
-                        var cc = order.CC;
-                        var branch = lead.Branch;
-                        var productLevelIds = contract.Cont_ProductLevels.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select<string, int>(e => int.Parse(e));
-                        var productLevels = _productLevelRepository.Where(e => productLevelIds.Contains(e.Prol_ID)).Select(e => e.Prol_Name).OrderBy(e => e).ToList();
-                        var beginLevel = productLevels[0];
-                        var endLevel = productLevels[productLevels.Count - 1];
-                        //合同开始时间为当前时间，结束时间根据等级数量去进行估算
-                        DateTime contractBeginTime = DateTime.Now;
-                        DateTime contractEndTime = DateTime.Now.AddMonths((int)6 * productLevelIds.Count());
+                    var branches = await _branchRepository.
+                        Where(e => e.Bran_Name == ct.BranchName)
+                        .ToListAsync();
 
-                        CrmStudentInfoModel model = new CrmStudentInfoModel();
-                        model.platfromKey = _classOptions.CurrentValue.MTSPlatformKey;
-                        model.userName = lead?.Lead_LeadID.ToString();
-                        model.email = lead?.Lead_Email;
-                        model.cName = lead?.Lead_Name;
-                        model.eName = lead?.Lead_EnName;
-                        model.gender = lead?.Lead_Gender == 0 ? 1 : 0;
-                        model.birthday = lead?.Lead_Birthday;
-                        model.mobile = lead?.Lead_Mobile;
-                        model.branchId = lead.Branch?.Bran_SapId;
-                        model.ccUserId = cc.User_Logon;
-                        model.contractId = contract?.Cont_ContractID;
-                        model.emeId = lead?.Lead_LeadID;
-                        model.contractNum = contract?.Cont_Number;
-                        model.cont_isbinding = null;
-                        model.contractType = product.Prod_Type.ToString();
-                        model.contractBranchId = branch?.Bran_SapId.ToString();
-                        model.contBeginDate = contract?.Cont_BegDate ?? contractBeginTime;
-                        model.contEndDate = contract?.Cont_EndDate ?? contractEndTime;
-                        model.contStatus = "02"; //02 执行、03冻结、06结束、01结束
-                        model.productId = product?.Prod_ID;
-                        model.productType = product.Prod_Type;
-                        model.beginProductLevelId = beginLevel;
-                        model.endProductLevelId = endLevel;
-                        model.currentLevel = beginLevel;
-                        model.productLevelId = string.Join(",", productLevels);
-                        model.contractShift = "Contract";
-                        model.Cont_ParentId = null;
-                        model.Cont_ShiftType = "Contract";
-                        model.Cont_reason = null;
-                        model.Cont_RefundAmount = 0;
-                        model.ccUserName = cc.User_Logon;
-                        model.classId = contract.Cont_ClassId;
-                        model.levelCodes = beginLevel;
-                        model.currLevelCodes = beginLevel;
-                        model.contractTypeSub = product.Prod_SubTypeID;
-                        models.Add(model);
+                    var teachers = await _userRepository.
+                        Include(e => e.Branch)
+                        .Where(e => e.User_CnName == ct.TeacherName
+                        //&& e.Branch.Bran_Name == ct.BranchName
+                        )
+                        .ToListAsync();
+                    var classes = await _classCourseRepository
+                        .Where(e => e.Clas_Name == ct.ClassName)
+                        .ToListAsync();
+
+                    if (teachers.Count() != 1
+                        || branches.Count() != 1
+                        || classes.Count() != 1)
+                    {
+                        tcodes.Add(ct.ClassName);
+                    }
+                    else
+                    {
+                        var t = teachers.FirstOrDefault();
+                        var b = branches.FirstOrDefault();
+                        var c = classes.FirstOrDefault();
+                        ct.TeacherId = t.User_ID;
+                        ct.BranchId = b.Bran_ID;
+                        ct.ClassId = c.Clas_ID;
+                        await _classTeacherRepository.UpdateAsync(ct);
                     }
                 }
-                var successCount = 0;
-                foreach (var m in models)
-                {
-                    var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
-                    if (response.ResultCode == "000000")
-                        successCount++;
-                }
 
-                return $"Class Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
+                return "";
             }
             catch (Exception ex)
             {
 
                 return "error";
             }
+
         }
+        #region 私有方法
         /// <summary>
         /// 和当前业务相关，不可重用
         /// </summary>
@@ -382,6 +382,11 @@ namespace DataTransfer.Application.CrmServices
             var a = code.Replace("FZ-LNCE", "").Substring(0, 1);
             return a == "1" ? "NEW_NCE1" : "NEW_NCE4";
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
         private async Task<CrmProduct> GetNewProductByOriginProductAsync(CrmProduct product)
         {
             var newName = (await _productRelationRepository.FirstOrDefaultAsync(
@@ -408,5 +413,6 @@ namespace DataTransfer.Application.CrmServices
             var startIndex = plNames.IndexOf(plName);
             return plNames.Skip(startIndex).Take(plCount).ToList();
         }
+        #endregion
     }
 }

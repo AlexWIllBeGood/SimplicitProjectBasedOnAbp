@@ -3,14 +3,16 @@ using System;
 using DataTransfer.EntityFramework.DbMigrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataTransfer.EntityFramework.DbMigrations.Migrations
 {
     [DbContext(typeof(LocalMySqlMigrationDbContext))]
-    partial class LocalMySqlMigrationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201120110311_addClassTeacher")]
+    partial class addClassTeacher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,19 +56,13 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
                     b.Property<string>("BranchName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int?>("ClassId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ClassName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int?>("TeacherId")
+                    b.Property<int>("TeacherId")
                         .HasColumnType("int");
 
                     b.Property<string>("TeacherName")

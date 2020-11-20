@@ -3,14 +3,16 @@ using System;
 using DataTransfer.EntityFramework.DbMigrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataTransfer.EntityFramework.DbMigrations.Migrations
 {
     [DbContext(typeof(LocalMySqlMigrationDbContext))]
-    partial class LocalMySqlMigrationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201119060414_addLogTable")]
+    partial class addLogTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,36 +47,7 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ClassRelation");
-                });
-
-            modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.ClassTeacher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("BranchName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int?>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClassName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int?>("TeacherId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TeacherName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ClassTeacher");
+                    b.ToTable("TransferLog");
                 });
 
             modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.ProductRelation", b =>
@@ -92,32 +65,6 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductRelation");
-                });
-
-            modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.TransferLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("BatchNo")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("CreateTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Para")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Response")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TransferLog");
                 });
 #pragma warning restore 612, 618
         }

@@ -15,6 +15,8 @@ namespace DataTransfer.EntityFramework
     {
         public DbSet<ProductRelation> ProductRelations { get; set; }
         public DbSet<ClassRelation> ClassRelations { get; set; }
+        public DbSet<TransferLog> TransferLogs { get; set; }
+        public DbSet<ClassTeacher> ClassTeachers { get; set; }
         public LocalMySqlDbContext(DbContextOptions<LocalMySqlDbContext> options) : base(options)
         {
 

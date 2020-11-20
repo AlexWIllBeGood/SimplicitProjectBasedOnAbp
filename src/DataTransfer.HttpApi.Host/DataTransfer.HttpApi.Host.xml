@@ -15,5 +15,11 @@
             发送学生信息到MTS
             </summary>
         </member>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.AddTeacherNameAsync">
+            <summary>
+            添加中教师信息
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>
