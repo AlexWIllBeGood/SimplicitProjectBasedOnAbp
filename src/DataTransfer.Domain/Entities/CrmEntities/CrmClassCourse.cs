@@ -251,6 +251,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         [ForeignKey("Clas_LT")]
         public virtual CrmUser LT { get; set; }
         public virtual ICollection<CrmClassStudent> ClassStudents { get; set; }
+        public virtual ICollection<CrmClassSchedule> ClassSchedules { get; set; }
         #endregion
     }
 }

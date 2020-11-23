@@ -22,6 +22,7 @@ namespace DataTransfer.Application.CrmServices
     public class CourseService : ApplicationService
     {
         private const int NewConceptProd = 3;
+        private const string ClassCode_FZ_NCE = "FZ-LNCE";
         private readonly IOptionsMonitor<CRMOptions> _classOptions;
         private readonly ClassCourseRepository _classCourseRepository;
         private readonly ProductLevelRepository _productLevelRepository;
@@ -69,9 +70,10 @@ namespace DataTransfer.Application.CrmServices
         /// 发送班级数据到MTS
         /// </summary>
         /// <returns></returns>
-        public async Task<string> SendClassToMtsAsync(int productType, int branchId, int clasStatus, DateTime beginTimeDate, string SAId, string FTId, string LTId)
+        public async Task<string> SendClassToMtsAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate, string SAId, string FTId, string LTId)
         {
             var targetClasses = await _classCourseRepository
+                .Include(e => e.ClassSchedules)
                 .Include(e => e.Product)
                 .Include(e => e.Branch)
                 .Include(e => e.SA)
@@ -84,6 +86,7 @@ namespace DataTransfer.Application.CrmServices
                 && e.Clas_Status == clasStatus
                 && e.Clas_Deleted == 0
                 && e.Clas_ActualBeginDate > beginTimeDate
+                && e.Clas_ActualBeginDate <= endTimeDate
                 ).ToListAsync();
 
             List<string> pls = targetClasses.Select(e => e.Product.Prod_Levels).ToList();
@@ -103,7 +106,7 @@ namespace DataTransfer.Application.CrmServices
                 model.SchoolId = tc.Branch.Bran_SapId;
                 model.ProductId = product.Prod_Type;
                 model.ClassTypeId = product.Prod_SubTypeID;
-                model.ProductLevelId = GetProductLevelNameByClassCode(tc.Clas_Code) ?? "";
+                model.ProductLevelId = await GetStartProductLevelOfClass(tc, 1);
                 model.ClassCName = tc.Clas_Code;
                 //model.SAId = tc.SA?.User_Logon ?? "jennifer_jy";
                 model.SAId = SAId;
@@ -168,6 +171,63 @@ namespace DataTransfer.Application.CrmServices
             return $"Class Trasfer info:Total:{clsses.Count} Success:{successCount} Fail:{clsses.Count - successCount}";
         }
         /// <summary>
+        /// 设置班级进度
+        /// </summary>
+        /// <param name="productType"></param>
+        /// <param name="branchId"></param>
+        /// <param name="clasStatus"></param>
+        /// <param name="beginTimeDate"></param>
+        /// <param name="endTimeDate"></param>
+        /// <returns></returns>
+        public async Task<string> SetClassProcessAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate)
+        {
+            var targetClasses = await _classCourseRepository
+                .Include(e => e.ClassSchedules)
+                .Include(e => e.Product)
+                .Include(e => e.Branch)
+                .Include(e => e.SA)
+                .Include(e => e.LT)
+                .Include(e => e.FT)
+                .Include(e => e.ClassStudents)
+                .Where(e =>
+                e.Product.Prod_Type == productType
+                && e.Clas_BranID == branchId
+                && e.Clas_Status == clasStatus
+                && e.Clas_Deleted == 0
+                && e.Clas_ActualBeginDate > beginTimeDate
+                && e.Clas_ActualBeginDate <= endTimeDate
+                ).ToListAsync();
+
+            var classRelations = await _classRelationRepository.GetListAsync();
+            var models = new List<SetClassProcessModel>();
+            foreach (var tc in targetClasses)
+            {
+                var mtsClassId = classRelations.FirstOrDefault(e => e.CrmClassId == tc.Clas_ID)?.MTSClassId;
+                var remainHour = await GetRemainHourOfClass(tc);
+                models.Add(new SetClassProcessModel() { });
+            }
+            var successCount = 0;
+            DateTime now = DateTime.Now;
+            string batchNo = $"{DataTransferConst.StudentTransferNo}{now.ToString("yyyyMMddHHmmss")}";
+            foreach (var m in models)
+            {
+                var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.ClassProcessSetUrl, m);
+                if (response.ResultCode == "000000")
+                    successCount++;
+
+                //保存日志
+                await _transferLogRepository.InsertAsync(new TransferLog()
+                {
+                    BatchNo = batchNo,
+                    Para = JsonConvert.SerializeObject(m),
+                    Response = JsonConvert.SerializeObject(response),
+                    Type = TransferLogType.ClassProcess,
+                    CreateTime = DateTime.Now
+                });
+            }
+            return $"ClassProcessSet Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
+        }
+        /// <summary>
         /// 发送学生合同信息到MTS
         /// </summary>
         /// <returns></returns>
@@ -188,6 +248,7 @@ namespace DataTransfer.Application.CrmServices
                 //查找所有相关的合同
                 var allContracts = _contractRepository
                     .Include(e => e.ClassCourse)
+                    .ThenInclude(e => e.ClassSchedules)
                     .Include(e => e.Product)
                     .Include(e => e.Lead)
                     .ThenInclude(e => e.Branch)
@@ -198,7 +259,7 @@ namespace DataTransfer.Application.CrmServices
                     && e.Cont_LeadId != null
                     && e.Cont_ProductID != null
                     && e.Cont_OrderID != null
-                    && e.Cont_ClassId !=null
+                    && e.Cont_ClassId != null
                     )
                     .ToList();
 
@@ -232,6 +293,9 @@ namespace DataTransfer.Application.CrmServices
                         .OrderBy(e => e.Cont_CreatedDate)
                         .ToList();
 
+                    var sumClassHour = contracts.Sum(e => e.Cont_ClassHour) * 3;
+                    var plCount = Convert.ToInt32(Math.Round((decimal)sumClassHour / 42));
+
                     var contract = contracts.FirstOrDefault();
                     var order = contract.Order;
                     var lead = contract.Lead;
@@ -239,7 +303,7 @@ namespace DataTransfer.Application.CrmServices
                     var cc = order.CC;
                     var branch = lead.Branch;
                     var product = await GetNewProductByOriginProductAsync(contract.Product);
-                    var productLevels = await GetNewProductLevelsAsync(contracts, classCourse.Clas_Code, product.Prod_Levels);
+                    var productLevels = await GetProductLevelsOfClassAsync(classCourse, plCount);
                     var beginLevel = productLevels[0];
                     var endLevel = productLevels[productLevels.Count - 1];
                     //合同开始时间为当前时间，结束时间根据等级数量去进行估算
@@ -281,11 +345,10 @@ namespace DataTransfer.Application.CrmServices
                     model.levelCodes = string.Join(",", productLevels);
                     model.currLevelCodes = beginLevel;
                     model.contractTypeSub = product.Prod_SubTypeID;
+                    model.remark = $"{DateTime.Now.ToString("yyyy年MM月dd日 HH:mm分")}导入，老系统课时{sumClassHour}，新系统{plCount * 42}，差额{sumClassHour - plCount * 42}.";
                     models.Add(model);
                 }
                 var successCount = 0;
-
-
                 DateTime now = DateTime.Now;
                 string batchNo = $"{DataTransferConst.StudentTransferNo}{now.ToString("yyyyMMddHHmmss")}";
                 foreach (var m in models)
@@ -404,16 +467,6 @@ namespace DataTransfer.Application.CrmServices
 
         #region 私有方法
         /// <summary>
-        /// 和当前业务相关，不可重用
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        private string GetProductLevelNameByClassCode(string code)
-        {
-            var a = code.Replace("FZ-LNCE", "").Substring(0, 1);
-            return a == "1" ? "NEW_NCE1" : "NEW_NCE4";
-        }
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="product"></param>
@@ -427,23 +480,32 @@ namespace DataTransfer.Application.CrmServices
             return await _productRepository.FirstOrDefaultAsync(e => e.Prod_Name == newName);
         }
         /// <summary>
-        /// 和当前业务相关，不可重用
+        /// 获取班级的初始级别
         /// </summary>
-        /// <param name="contracts"></param>
-        /// <param name="classCode"></param>
-        /// <param name="productLevelIds"></param>
+        /// <param name="cc"></param>
         /// <returns></returns>
-        private async Task<List<string>> GetNewProductLevelsAsync(List<CrmContract> contracts, string classCode, string productLevelIds)
+        private async Task<string> GetStartProductLevelOfClass(CrmClassCourse cc, int? plCount)
         {
-            var classHour = contracts.Sum(e => e.Cont_ClassHour) * 3;
-            var plCount = Convert.ToInt32(Math.Round((decimal)classHour / 42));
-            //var plCount = (int)Math.Floor((decimal)classHour / 42) == 0 ? 1 : (int)Math.Floor((decimal)classHour / 42);
-            string plName = GetProductLevelNameByClassCode(classCode);
-            var startLevel = await _productLevelRepository.FirstOrDefaultAsync(e => e.Prol_Name == plName);
-            var plIds = productLevelIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select<string, int>(e => int.Parse(e));
-            var plNames = _productLevelRepository.Where(e => plIds.Contains(e.Prol_ID)).Select(e => e.Prol_Name).OrderBy(e => e).ToList();
-            var startIndex = plNames.IndexOf(plName);
-            return plNames.Skip(startIndex).Take(plCount).ToList();
+            var plNames = await GetProductLevelsOfClassAsync(cc, plCount);
+            var waitHour = cc.ClassSchedules.Count(e => e.Clsc_Status == 0 && e.Clsc_Deleted == 0);
+            var startIndex = plNames.Count - Convert.ToInt32(Math.Ceiling((decimal)waitHour * 3 / 42));
+            return plNames[startIndex - 1];
+        }
+        private async Task<int> GetRemainHourOfClass(CrmClassCourse cc)
+        {
+            var waitHour = cc.ClassSchedules.Count(e => e.Clsc_Status == 0 && e.Clsc_Deleted == 0);
+            return await Task.FromResult((waitHour * 3) % 42);
+        }
+        /// <summary>
+        /// 获取班级的所有级别
+        /// </summary>
+        /// <param name="cc"></param>
+        /// <returns></returns>
+        private async Task<List<string>> GetProductLevelsOfClassAsync(CrmClassCourse cc, int? plCount)
+        {
+            var plIds = cc.Product.Prod_Levels.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select<string, int>(e => int.Parse(e));
+            var plNames = await _productLevelRepository.Where(e => plIds.Contains(e.Prol_ID)).Select(e => e.Prol_Name).OrderBy(e => e).Take((int)plCount).ToListAsync();
+            return plNames;
         }
         #endregion
     }

@@ -177,5 +177,9 @@ namespace DataTransfer.Domain.Entities.Temp
         ///  课程小类： 1周末班 2周中班
         /// </summary>
         public int? contractTypeSub { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string remark { get; set; }
     }
 }

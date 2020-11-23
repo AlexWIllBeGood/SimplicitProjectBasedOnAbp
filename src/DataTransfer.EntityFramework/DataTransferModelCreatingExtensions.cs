@@ -106,7 +106,12 @@ namespace DataTransfer.EntityFramework
                 //options.ConfigureByConvention();
                 options.ToTable("ClassStudent");
             });
-            
+
+            builder.Entity<CrmClassSchedule>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("ClassSchedule");
+            });
         }
     }
 }

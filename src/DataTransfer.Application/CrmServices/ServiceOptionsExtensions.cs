@@ -31,6 +31,7 @@ namespace DataTransfer.Application.CrmServices
     public class CRMOptions
     {
         public string ClassSendMTSUrl { get; set; }
+        public string ClassProcessSetUrl { get; set; }
         public string StudentSendMTSUrl { get; set; }
         public string OrderSendMTSUrl { get; set; }
         public string MTSPlatformKey { get; set; }

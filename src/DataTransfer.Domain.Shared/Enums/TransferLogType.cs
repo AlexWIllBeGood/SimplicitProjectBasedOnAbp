@@ -24,6 +24,11 @@ namespace DataTransfer.Domain.Shared.Enums
         /// 学生
         /// </summary>
         [Description("学生")]
-        Student = 2
+        Student = 2,
+        /// <summary>
+        /// 课程进度
+        /// </summary>
+        [Description("课程进度")]
+        ClassProcess=3
     }
 }

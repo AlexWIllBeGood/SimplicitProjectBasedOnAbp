@@ -25,14 +25,25 @@ namespace DataTransfer.HttpApi.Host.Controllers
             this._classService = classService;
         }
         /// <summary>
-        /// 发送班级信息到MTS
+        /// FZ_NCE_PRE
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<string> SendClassToMtsAsync()
+        public async Task<string> SendClassToMtsAsync_FZ_NCE_PRE()
         {
-            return await _classService.SendClassToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
+            return await _classService.SendClassToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), null, "jennifer_jy", "muham_mjm", "doris_zq");
         }
+        /// <summary>
+        /// FZ_NCE_PRO
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> SendClassToMtsAsync_FZ_NCE_Pro()
+        {
+            var classInfo= await _classService.SendClassToMtsAsync(3, 101005000, 2, null, Convert.ToDateTime("2020-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
+            var classSetInfo = await _classService.SetClassProcessAsync(3, 101005000, 2, null, Convert.ToDateTime("2020-11-01"));
+            return $"{classInfo}/r/n{classSetInfo}";
+        }
+
         /// <summary>
         /// 发送学生信息到MTS
         /// </summary>
