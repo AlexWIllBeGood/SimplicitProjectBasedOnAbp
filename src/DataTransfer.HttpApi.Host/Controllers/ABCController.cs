@@ -31,7 +31,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
         [HttpPost]
         public async Task<string> SendClassToMtsAsync()
         {
-            return await _classService.SendClassToMtsAsync();
+            return await _classService.SendClassToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
         }
         /// <summary>
         /// 发送学生信息到MTS
@@ -39,8 +39,10 @@ namespace DataTransfer.HttpApi.Host.Controllers
         [HttpPost]
         public async Task<string> SendStudentToMtsAsync()
         {
-            return await _classService.SendStudentToMtsAsync();
+            return await _classService.SendStudentToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"));
         }
+
+        #region 添加老师信息
         /// <summary>
         /// 查找老师班级ID
         /// </summary>
@@ -59,7 +61,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
         {
             return await _classService.AddTeacherNameAsync();
         }
+        #endregion
 
-        
     }
 }

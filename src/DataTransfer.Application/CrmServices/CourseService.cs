@@ -69,9 +69,8 @@ namespace DataTransfer.Application.CrmServices
         /// 发送班级数据到MTS
         /// </summary>
         /// <returns></returns>
-        public async Task<string> SendClassToMtsAsync()
+        public async Task<string> SendClassToMtsAsync(int productType, int branchId, int clasStatus, DateTime beginTimeDate, string SAId, string FTId, string LTId)
         {
-            var Nov = Convert.ToDateTime("2020-11-01");
             var targetClasses = await _classCourseRepository
                 .Include(e => e.Product)
                 .Include(e => e.Branch)
@@ -80,11 +79,11 @@ namespace DataTransfer.Application.CrmServices
                 .Include(e => e.FT)
                 .Include(e => e.ClassStudents)
                 .Where(e =>
-                e.Product.Prod_Type == 3
-                && e.Clas_BranID == 101005000
-                && e.Clas_Status == 1
+                e.Product.Prod_Type == productType
+                && e.Clas_BranID == branchId
+                && e.Clas_Status == clasStatus
                 && e.Clas_Deleted == 0
-                && e.Clas_ActualBeginDate > Nov
+                && e.Clas_ActualBeginDate > beginTimeDate
                 ).ToListAsync();
 
             List<string> pls = targetClasses.Select(e => e.Product.Prod_Levels).ToList();
@@ -107,11 +106,11 @@ namespace DataTransfer.Application.CrmServices
                 model.ProductLevelId = GetProductLevelNameByClassCode(tc.Clas_Code) ?? "";
                 model.ClassCName = tc.Clas_Code;
                 //model.SAId = tc.SA?.User_Logon ?? "jennifer_jy";
-                model.SAId = "jennifer_jy";
+                model.SAId = SAId;
                 model.HasFT = true;
-                model.FTId = "muham_mjm";
+                model.FTId = FTId;
                 model.HasLT = true;
-                model.LTId = "doris_zq";
+                model.LTId = LTId;
                 //model.HasFT = tc.FT != null;
                 //model.FTId = tc.FT?.User_Logon;
                 //model.HasLT = tc.LT != null;
@@ -156,7 +155,6 @@ namespace DataTransfer.Application.CrmServices
                         });
                     }
                 }
-
                 //保存日志
                 await _transferLogRepository.InsertAsync(new TransferLog()
                 {
@@ -173,18 +171,17 @@ namespace DataTransfer.Application.CrmServices
         /// 发送学生合同信息到MTS
         /// </summary>
         /// <returns></returns>
-        public async Task<string> SendStudentToMtsAsync()
+        public async Task<string> SendStudentToMtsAsync(int productType, int branchId, int clasStatus, DateTime beginTimeDate)
         {
             try
             {
-                var Nov = Convert.ToDateTime("2020-11-01");
                 var targetClasses = await _classCourseRepository
                     .Where(e =>
-                    e.Product.Prod_Type == 3
-                    && e.Clas_BranID == 101005000
-                    && e.Clas_Status == 1
+                    e.Product.Prod_Type == productType
+                    && e.Clas_BranID == branchId
+                    && e.Clas_Status == clasStatus
                     && e.Clas_Deleted == 0
-                    && e.Clas_ActualBeginDate > Nov
+                    && e.Clas_ActualBeginDate > beginTimeDate
                     ).ToListAsync();
 
                 var classIds = targetClasses.Select(e => e.Clas_ID).ToList();
@@ -439,9 +436,8 @@ namespace DataTransfer.Application.CrmServices
         private async Task<List<string>> GetNewProductLevelsAsync(List<CrmContract> contracts, string classCode, string productLevelIds)
         {
             var classHour = contracts.Sum(e => e.Cont_ClassHour) * 3;
-
-            //var plCount = classHourLevels.FirstOrDefault(e => e.Hour == classHour);
-            var plCount = (int)Math.Floor((decimal)classHour / 42) == 0 ? 1 : (int)Math.Floor((decimal)classHour / 42);
+            var plCount = Convert.ToInt32(Math.Round((decimal)classHour / 42));
+            //var plCount = (int)Math.Floor((decimal)classHour / 42) == 0 ? 1 : (int)Math.Floor((decimal)classHour / 42);
             string plName = GetProductLevelNameByClassCode(classCode);
             var startLevel = await _productLevelRepository.FirstOrDefaultAsync(e => e.Prol_Name == plName);
             var plIds = productLevelIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList().Select<string, int>(e => int.Parse(e));
