@@ -34,6 +34,7 @@ namespace DataTransfer.Application.CrmServices
         private readonly ClassTeacherRepository _classTeacherRepository;
         private readonly UserRepository _userRepository;
         private readonly BranchRepository _branchRepository;
+        private readonly ClassHourLevelRepository _classHourLevelRepository;
         public CourseService(
             IOptionsMonitor<CRMOptions> classOptions,
             ClassCourseRepository classCourseRepository,
@@ -46,7 +47,8 @@ namespace DataTransfer.Application.CrmServices
             TransferLogRepository transferLogRepository,
             ClassTeacherRepository classTeacherRepository,
             UserRepository userRepository,
-            BranchRepository branchRepository
+            BranchRepository branchRepository,
+            ClassHourLevelRepository classHourLevelRepository
             )
         {
             this._classOptions = classOptions;
@@ -61,6 +63,7 @@ namespace DataTransfer.Application.CrmServices
             this._classTeacherRepository = classTeacherRepository;
             this._userRepository = userRepository;
             this._branchRepository = branchRepository;
+            this._classHourLevelRepository = classHourLevelRepository;
         }
         /// <summary>
         /// 发送班级数据到MTS
@@ -198,13 +201,16 @@ namespace DataTransfer.Application.CrmServices
                     && e.Cont_LeadId != null
                     && e.Cont_ProductID != null
                     && e.Cont_OrderID != null
+                    && e.Cont_ClassId !=null
                     )
                     .ToList();
+
                 //根据合同获取所有相关的班级对应信息
                 var allCrmClassIds = allContracts.Select(e => e.Cont_ClassId).Distinct();
                 var allClassRelations = _classRelationRepository
                     .Where(e => allCrmClassIds.Contains(e.CrmClassId))
                     .ToList();
+
                 //将相关合同按照签约人，产品，订单划分
                 //按照班级（产品去进行分组，实际上一个班级只会有一个产品）
                 var contractGroups = allContracts
@@ -217,6 +223,7 @@ namespace DataTransfer.Application.CrmServices
                         Count = e.Count()
                     })
                     .ToList();
+
                 //var target = contractGroups.Where(e => e.Cont_LeadId == 296).ToList();
                 List<CrmStudentInfoModel> models = new List<CrmStudentInfoModel>();
                 foreach (var cg in contractGroups)
@@ -231,11 +238,6 @@ namespace DataTransfer.Application.CrmServices
                     var contract = contracts.FirstOrDefault();
                     var order = contract.Order;
                     var lead = contract.Lead;
-
-                    if (lead.Lead_Name == "曹诗琪")
-                    {
-                        var a = 1;
-                    }
                     var classCourse = contract.ClassCourse;
                     var cc = order.CC;
                     var branch = lead.Branch;
@@ -246,7 +248,6 @@ namespace DataTransfer.Application.CrmServices
                     //合同开始时间为当前时间，结束时间根据等级数量去进行估算
                     DateTime contractBeginTime = contract?.Cont_BegDate ?? DateTime.Now;
                     DateTime contractEndTime = contractBeginTime.AddMonths((int)6 * productLevels.Count());
-
                     CrmStudentInfoModel model = new CrmStudentInfoModel();
                     model.platfromKey = _classOptions.CurrentValue.MTSPlatformKey;
                     model.userName = lead?.Lead_LeadID.ToString();
@@ -306,9 +307,7 @@ namespace DataTransfer.Application.CrmServices
                         CreateTime = DateTime.Now
                     });
                 }
-
                 return $"Student Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
-
             }
             catch (Exception ex)
             {
@@ -321,6 +320,36 @@ namespace DataTransfer.Application.CrmServices
         /// <returns></returns>
         public async Task<string> AddTeacherNameAsync()
         {
+            var cts = await _classTeacherRepository
+                .GetListAsync();
+
+            var classIds = cts.Select(e => e.ClassId)
+                .ToList();
+
+            var classes = await _classCourseRepository
+                .Where(e => classIds.Contains(e.Clas_ID))
+                .ToListAsync();
+
+            foreach (var c in classes)
+            {
+                List<int> emptyClassIds = new List<int>();
+                var LTId = cts.FirstOrDefault(e => e.ClassId == c.Clas_ID)?.TeacherId;
+                if (LTId != null)
+                {
+                    c.Clas_LT = LTId;
+                    await _classCourseRepository.UpdateAsync(c);
+                }
+                emptyClassIds.Add(c.Clas_ID);
+            }
+
+            return "";
+        }
+        /// <summary>
+        /// 查找对应教师，班级数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> FindTeacherClassAsync()
+        {
             try
             {
                 var classTeachers = await _classTeacherRepository.GetListAsync();
@@ -331,17 +360,22 @@ namespace DataTransfer.Application.CrmServices
                 foreach (var ct in classTeachers)
                 {
                     var branches = await _branchRepository.
-                        Where(e => e.Bran_Name == ct.BranchName)
+                        Where(e => e.Bran_Name == ct.BranchName
+                        && e.Bran_Deleted == 0
+                        )
                         .ToListAsync();
 
                     var teachers = await _userRepository.
                         Include(e => e.Branch)
                         .Where(e => e.User_CnName == ct.TeacherName
+                        && e.User_Deleted == 0
                         //&& e.Branch.Bran_Name == ct.BranchName
                         )
                         .ToListAsync();
                     var classes = await _classCourseRepository
-                        .Where(e => e.Clas_Name == ct.ClassName)
+                        .Where(e => e.Clas_Code == ct.ClassName
+                        && e.Clas_Deleted == 0
+                        )
                         .ToListAsync();
 
                     if (teachers.Count() != 1
@@ -369,8 +403,8 @@ namespace DataTransfer.Application.CrmServices
 
                 return "error";
             }
-
         }
+
         #region 私有方法
         /// <summary>
         /// 和当前业务相关，不可重用
@@ -405,6 +439,8 @@ namespace DataTransfer.Application.CrmServices
         private async Task<List<string>> GetNewProductLevelsAsync(List<CrmContract> contracts, string classCode, string productLevelIds)
         {
             var classHour = contracts.Sum(e => e.Cont_ClassHour) * 3;
+
+            //var plCount = classHourLevels.FirstOrDefault(e => e.Hour == classHour);
             var plCount = (int)Math.Floor((decimal)classHour / 42) == 0 ? 1 : (int)Math.Floor((decimal)classHour / 42);
             string plName = GetProductLevelNameByClassCode(classCode);
             var startLevel = await _productLevelRepository.FirstOrDefaultAsync(e => e.Prol_Name == plName);

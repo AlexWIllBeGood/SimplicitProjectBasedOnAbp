@@ -37,6 +37,11 @@ namespace DataTransfer.EntityFramework
                 options.ConfigureByConvention();
                 options.ToTable("ClassTeacher");
             });
+
+            builder.Entity<ClassHourLevel>(options => {
+                options.ConfigureByConvention();
+                options.ToTable("ClassHourLevel");
+            });
         }
 
         public static void ConfigureCrm(this ModelBuilder builder)

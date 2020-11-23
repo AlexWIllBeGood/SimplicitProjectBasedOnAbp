@@ -15,6 +15,12 @@
             发送学生信息到MTS
             </summary>
         </member>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.FindTeacherClassAsync">
+            <summary>
+            查找老师班级ID
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.AddTeacherNameAsync">
             <summary>
             添加中教师信息
