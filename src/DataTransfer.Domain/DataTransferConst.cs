@@ -8,5 +8,6 @@ namespace DataTransfer.Domain
     {
         public static string ClassTransferNo = "CDT";
         public static string StudentTransferNo = "SDT";
+        public static string ProcessTransferNo = "PDT";
     }
 }

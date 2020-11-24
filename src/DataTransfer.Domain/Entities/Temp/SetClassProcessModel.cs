@@ -6,5 +6,7 @@ namespace DataTransfer.Domain.Entities.Temp
 {
     public class SetClassProcessModel
     {
+        public int? ClassId { get; set; }
+        public int? LessonPeriod { get; set; }
     }
 }

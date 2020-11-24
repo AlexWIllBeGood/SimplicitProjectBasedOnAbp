@@ -174,7 +174,7 @@ namespace DataTransfer.Domain.Entities.Coupan
         /// <summary>
         /// 是否使用POS收款流程(包括微信、支付宝)
         /// </summary>
-        public bool? Orde_IsPos { get; set; }
+        public int? Orde_IsPos { get; set; }
 
         [NotMapped]
         public int Id { get; set; }

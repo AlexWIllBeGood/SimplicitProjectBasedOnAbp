@@ -6,5 +6,6 @@ namespace DataTransfer.Domain.Entities.Temp
 {
     public class CommonMTSResponseEntity : MTSResponseBaseEntity
     {
+
     }
 }

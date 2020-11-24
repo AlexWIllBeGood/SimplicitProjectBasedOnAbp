@@ -31,17 +31,16 @@ namespace DataTransfer.HttpApi.Host.Controllers
         [HttpPost]
         public async Task<string> SendClassToMtsAsync_FZ_NCE_PRE()
         {
-            return await _classService.SendClassToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), null, "jennifer_jy", "muham_mjm", "doris_zq");
+            return await _classService.SendClassToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
         }
         /// <summary>
         /// FZ_NCE_PRO
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<string> SendClassToMtsAsync_FZ_NCE_Pro()
+        public async Task<string> SendClassToMtsAsync_FZ_NCE_PRO()
         {
-            var classInfo= await _classService.SendClassToMtsAsync(3, 101005000, 2, null, Convert.ToDateTime("2020-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
-            var classSetInfo = await _classService.SetClassProcessAsync(3, 101005000, 2, null, Convert.ToDateTime("2020-11-01"));
+            var classInfo= await _classService.SendClassToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
             return $"{classInfo}";
         }
 
@@ -51,7 +50,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
         [HttpPost]
         public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRE()
         {
-            return await _classService.SendStudentToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), null);
+            return await _classService.SendStudentToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"));
         }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
         [HttpPost]
         public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRO()
         {
-            return await _classService.SendStudentToMtsAsync(3, 101005000, 2, null, Convert.ToDateTime("2020-11-01"));
+            return await _classService.SendStudentToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"));
         }
 
         /// <summary>
@@ -68,9 +67,9 @@ namespace DataTransfer.HttpApi.Host.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<string> SetClassProcessAsync_FZ_NCE_Pro()
+        public async Task<string> SetClassProcessAsync_FZ_NCE_PRO()
         {
-            var classSetInfo = await _classService.SetClassProcessAsync(3, 101005000, 2, null, Convert.ToDateTime("2020-11-01"));
+            var classSetInfo = await _classService.SetClassProcessAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"));
             return $"{classSetInfo}";
         }
 
