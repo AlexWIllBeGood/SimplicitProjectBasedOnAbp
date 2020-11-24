@@ -37,20 +37,41 @@ namespace DataTransfer.HttpApi.Host.Controllers
         /// FZ_NCE_PRO
         /// </summary>
         /// <returns></returns>
+        [HttpPost]
         public async Task<string> SendClassToMtsAsync_FZ_NCE_Pro()
         {
             var classInfo= await _classService.SendClassToMtsAsync(3, 101005000, 2, null, Convert.ToDateTime("2020-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
             var classSetInfo = await _classService.SetClassProcessAsync(3, 101005000, 2, null, Convert.ToDateTime("2020-11-01"));
-            return $"{classInfo}/r/n{classSetInfo}";
+            return $"{classInfo}";
         }
 
         /// <summary>
-        /// 发送学生信息到MTS
+        /// FZ_NCE_PRE
         /// </summary>
         [HttpPost]
-        public async Task<string> SendStudentToMtsAsync()
+        public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRE()
         {
-            return await _classService.SendStudentToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"));
+            return await _classService.SendStudentToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), null);
+        }
+
+        /// <summary>
+        /// FZ_NCE_PRO
+        /// </summary>
+        [HttpPost]
+        public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRO()
+        {
+            return await _classService.SendStudentToMtsAsync(3, 101005000, 2, null, Convert.ToDateTime("2020-11-01"));
+        }
+
+        /// <summary>
+        /// FZ_NCE_PRO
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<string> SetClassProcessAsync_FZ_NCE_Pro()
+        {
+            var classSetInfo = await _classService.SetClassProcessAsync(3, 101005000, 2, null, Convert.ToDateTime("2020-11-01"));
+            return $"{classSetInfo}";
         }
 
         #region 添加老师信息

@@ -134,40 +134,40 @@ namespace DataTransfer.Application.CrmServices
 
             DateTime now = DateTime.Now;
             string batchNo = $"{DataTransferConst.ClassTransferNo}{now.ToString("yyyyMMddHHmmss")}";
-            foreach (var c in clsses)
-            {
-                var response = HttpHelper.PostAsync<ClassMRTSResponseEntity>(_classOptions.CurrentValue.ClassSendMTSUrl, c);
-                if (response.ResultCode == "100000"
-                    || response.ResultCode == "100002")
-                {
-                    successCount++;
-                    //保存classRelation的关系
-                    var crmClassId = targetClasses.FirstOrDefault(e => e.Clas_Code == c.ClassCName)?.Clas_ID;
-                    var existClassRelation = await _classRelationRepository.FirstOrDefaultAsync(e => e.CrmClassId == crmClassId);
-                    if (existClassRelation != null)
-                    {
-                        existClassRelation.MTSClassId = response.MTSClassId;
-                        await _classRelationRepository.UpdateAsync(existClassRelation);
-                    }
-                    else
-                    {
-                        await _classRelationRepository.InsertAsync(new ClassRelation()
-                        {
-                            CrmClassId = crmClassId,
-                            MTSClassId = response.MTSClassId
-                        });
-                    }
-                }
-                //保存日志
-                await _transferLogRepository.InsertAsync(new TransferLog()
-                {
-                    BatchNo = batchNo,
-                    Para = JsonConvert.SerializeObject(c),
-                    Response = JsonConvert.SerializeObject(response),
-                    Type = TransferLogType.Class,
-                    CreateTime = DateTime.Now
-                });
-            }
+            //foreach (var c in clsses)
+            //{
+            //    var response = HttpHelper.PostAsync<ClassMRTSResponseEntity>(_classOptions.CurrentValue.ClassSendMTSUrl, c);
+            //    if (response.ResultCode == "100000"
+            //        || response.ResultCode == "100002")
+            //    {
+            //        successCount++;
+            //        //保存classRelation的关系
+            //        var crmClassId = targetClasses.FirstOrDefault(e => e.Clas_Code == c.ClassCName)?.Clas_ID;
+            //        var existClassRelation = await _classRelationRepository.FirstOrDefaultAsync(e => e.CrmClassId == crmClassId);
+            //        if (existClassRelation != null)
+            //        {
+            //            existClassRelation.MTSClassId = response.MTSClassId;
+            //            await _classRelationRepository.UpdateAsync(existClassRelation);
+            //        }
+            //        else
+            //        {
+            //            await _classRelationRepository.InsertAsync(new ClassRelation()
+            //            {
+            //                CrmClassId = crmClassId,
+            //                MTSClassId = response.MTSClassId
+            //            });
+            //        }
+            //    }
+            //    //保存日志
+            //    await _transferLogRepository.InsertAsync(new TransferLog()
+            //    {
+            //        BatchNo = batchNo,
+            //        Para = JsonConvert.SerializeObject(c),
+            //        Response = JsonConvert.SerializeObject(response),
+            //        Type = TransferLogType.Class,
+            //        CreateTime = DateTime.Now
+            //    });
+            //}
             return $"Class Trasfer info:Total:{clsses.Count} Success:{successCount} Fail:{clsses.Count - successCount}";
         }
         /// <summary>
@@ -209,29 +209,29 @@ namespace DataTransfer.Application.CrmServices
             var successCount = 0;
             DateTime now = DateTime.Now;
             string batchNo = $"{DataTransferConst.StudentTransferNo}{now.ToString("yyyyMMddHHmmss")}";
-            foreach (var m in models)
-            {
-                var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.ClassProcessSetUrl, m);
-                if (response.ResultCode == "000000")
-                    successCount++;
+            //foreach (var m in models)
+            //{
+            //    var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.ClassProcessSetUrl, m);
+            //    if (response.ResultCode == "000000")
+            //        successCount++;
 
-                //保存日志
-                await _transferLogRepository.InsertAsync(new TransferLog()
-                {
-                    BatchNo = batchNo,
-                    Para = JsonConvert.SerializeObject(m),
-                    Response = JsonConvert.SerializeObject(response),
-                    Type = TransferLogType.ClassProcess,
-                    CreateTime = DateTime.Now
-                });
-            }
+            //    //保存日志
+            //    await _transferLogRepository.InsertAsync(new TransferLog()
+            //    {
+            //        BatchNo = batchNo,
+            //        Para = JsonConvert.SerializeObject(m),
+            //        Response = JsonConvert.SerializeObject(response),
+            //        Type = TransferLogType.ClassProcess,
+            //        CreateTime = DateTime.Now
+            //    });
+            //}
             return $"ClassProcessSet Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
         }
         /// <summary>
         /// 发送学生合同信息到MTS
         /// </summary>
         /// <returns></returns>
-        public async Task<string> SendStudentToMtsAsync(int productType, int branchId, int clasStatus, DateTime beginTimeDate)
+        public async Task<string> SendStudentToMtsAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate)
         {
             try
             {
@@ -242,6 +242,7 @@ namespace DataTransfer.Application.CrmServices
                     && e.Clas_Status == clasStatus
                     && e.Clas_Deleted == 0
                     && e.Clas_ActualBeginDate > beginTimeDate
+                    && e.Clas_ActualBeginDate <= endTimeDate
                     ).ToListAsync();
 
                 var classIds = targetClasses.Select(e => e.Clas_ID).ToList();
@@ -351,22 +352,22 @@ namespace DataTransfer.Application.CrmServices
                 var successCount = 0;
                 DateTime now = DateTime.Now;
                 string batchNo = $"{DataTransferConst.StudentTransferNo}{now.ToString("yyyyMMddHHmmss")}";
-                foreach (var m in models)
-                {
-                    var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
-                    if (response.ResultCode == "000000")
-                        successCount++;
+                //foreach (var m in models)
+                //{
+                //    var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
+                //    if (response.ResultCode == "000000")
+                //        successCount++;
 
-                    //保存日志
-                    await _transferLogRepository.InsertAsync(new TransferLog()
-                    {
-                        BatchNo = batchNo,
-                        Para = JsonConvert.SerializeObject(m),
-                        Response = JsonConvert.SerializeObject(response),
-                        Type = TransferLogType.Student,
-                        CreateTime = DateTime.Now
-                    });
-                }
+                //    //保存日志
+                //    await _transferLogRepository.InsertAsync(new TransferLog()
+                //    {
+                //        BatchNo = batchNo,
+                //        Para = JsonConvert.SerializeObject(m),
+                //        Response = JsonConvert.SerializeObject(response),
+                //        Type = TransferLogType.Student,
+                //        CreateTime = DateTime.Now
+                //    });
+                //}
                 return $"Student Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
             }
             catch (Exception ex)
