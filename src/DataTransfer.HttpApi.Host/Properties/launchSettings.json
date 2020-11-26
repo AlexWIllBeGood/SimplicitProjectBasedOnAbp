@@ -3,12 +3,16 @@
     "DataTransfer.HttpApi.Host": {
       "commandName": "Project",
       "launchBrowser": true,
-      //"launchUrl": "api/ABC/AddCoupan",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        //"ASPNETCORE_ENVIRONMENT": "Product"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:5000"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true
     }
   }
 }
