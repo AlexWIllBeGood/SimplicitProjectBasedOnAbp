@@ -115,7 +115,8 @@ namespace DataTransfer.Application.CrmServices
                     model.HasFT = true;
                     model.FTId = FTId;
                     model.HasLT = true;
-                    model.LTId = LTId;
+                    //中教没有就使用默认的
+                    model.LTId = tc.LT?.User_Logon ?? LTId;
                     //model.HasFT = tc.FT != null;
                     //model.FTId = tc.FT?.User_Logon;
                     //model.HasLT = tc.LT != null;
@@ -127,7 +128,17 @@ namespace DataTransfer.Application.CrmServices
                     StringBuilder scheduleBuilder = new StringBuilder();
                     foreach (var scs in scss)
                     {
-                        scheduleBuilder.Append($"{scs.Week}*{scs.BeginTime}*{scs.EndTime}&");
+                        var beginTime = Convert.ToDateTime(scs.BeginTime);
+                        var endTime = Convert.ToDateTime(scs.EndTime);
+                        var currentTime = beginTime.AddHours(1);
+                        while (true)
+                        {
+                            scheduleBuilder.Append($"{scs.Week}*{beginTime.ToString("HH:mm")}*{currentTime.ToString("HH:mm")}&");
+                            if (currentTime >= endTime)
+                                break;
+                            beginTime = currentTime;
+                            currentTime = currentTime.AddHours(1);
+                        }
                     }
                     model.CourseTimes = scheduleBuilder.ToString().TrimEnd('&');
                     clsses.Add(model);
@@ -177,7 +188,6 @@ namespace DataTransfer.Application.CrmServices
 
                 return "error";
             }
-            
         }
         /// <summary>
         /// 设置班级进度
@@ -212,7 +222,7 @@ namespace DataTransfer.Application.CrmServices
             foreach (var tc in targetClasses)
             {
                 var mtsClassId = classRelations.FirstOrDefault(e => e.CrmClassId == tc.Clas_ID)?.MTSClassId;
-                var remainHour = await GetRemainHourOfClass(tc);
+                var remainHour = await GetRemainHourOfClassAsync(tc);
                 models.Add(new SetClassProcessModel()
                 {
                     ClassId = mtsClassId,
@@ -245,12 +255,12 @@ namespace DataTransfer.Application.CrmServices
         /// 发送学生合同信息到MTS
         /// </summary>
         /// <returns></returns>
-        public async Task<string> SendStudentToMtsAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate)
+        public async Task<string> SendStudentToMtsAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate, string classStatus)
         {
             try
             {
                 var targetClasses = await _classCourseRepository
-                    .Include(e=>e.ClassStudents)
+                    .Include(e => e.ClassStudents)
                     .Include(e => e.ClassSchedules)
                     .Where(e =>
                     e.Product.Prod_Type == productType
@@ -261,7 +271,18 @@ namespace DataTransfer.Application.CrmServices
                     && e.Clas_ActualBeginDate <= endTimeDate
                     ).ToListAsync();
                 var classIds = targetClasses.Select(e => e.Clas_ID).ToList();
-                var classStudents = targetClasses.SelectMany(e => e.ClassStudents).ToList();
+                List<CrmClassStudent> classStudents;
+                if (string.IsNullOrEmpty(classStatus))
+                {
+                    classStudents = targetClasses.SelectMany(e => e.ClassStudents).ToList();
+                }
+                else
+                {
+                    List<int> classStatusList = classStatus.Split(',', StringSplitOptions.RemoveEmptyEntries).ToArray().Select<string, int>(e => Convert.ToInt32(e)).ToList();
+                    classStudents = targetClasses.SelectMany(e => e.ClassStudents)
+                    .Where(e => classStatusList.Contains(e.Clst_Status))
+                    .ToList();
+                }
                 //查找所有相关的合同
                 var allContracts = _contractRepository
                     .Include(e => e.ClassCourse)
@@ -303,9 +324,12 @@ namespace DataTransfer.Application.CrmServices
                 List<CrmStudentInfoModel> models = new List<CrmStudentInfoModel>();
                 foreach (var cg in contractGroups)
                 {
+                    if (cg.Cont_LeadId == 982844)
+                    {
+                        var a = 1;
+                    }
                     var cs = classStudents.FirstOrDefault(e =>
-                    (e.Clst_Status == 0 || e.Clst_Status == 1)
-                    && e.Clst_LeadID == cg.Cont_LeadId
+                    e.Clst_LeadID == cg.Cont_LeadId
                     && e.Clst_ClassID == cg.Cont_ClassId
                     && e.Clst_Deleted == 0
                         );
@@ -379,27 +403,34 @@ namespace DataTransfer.Application.CrmServices
                     {
                         model.remark = $"{DateTime.Now.ToString("yyyy年MM月dd日 HH:mm分")}导入，老系统课时{sumClassHour}，新系统{plCount * 42}，差额{sumClassHour - plCount * 42}.";
                     }
+                    else if (clasStatus == 2)
+                    {
+                        var classWaitHour = await GetRemainHourOfClassAsync(tc);
+                        var newWaitHour= classWaitHour + (productLevels.Count - 1) * 42;
+                        var newTotalHour = cs.Clst_FinishHour * 3 + newWaitHour;
+                        model.remark = $"{DateTime.Now.ToString("yyyy年MM月dd日 HH:mm分")}导入，老系统课时{sumClassHour}，老系统完成{cs.Clst_FinishHour * 3}，新系统剩余{newWaitHour}，差额{sumClassHour - newTotalHour}.";
+                    }
                     models.Add(model);
                 }
                 var successCount = 0;
                 DateTime now = DateTime.Now;
                 string batchNo = $"{DataTransferConst.StudentTransferNo}{now.ToString("yyyyMMddHHmmss")}";
-                foreach (var m in models)
-                {
-                    var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
-                    if (response.ResultCode == "000000")
-                        successCount++;
+                //foreach (var m in models)
+                //{
+                //    var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
+                //    if (response.ResultCode == "000000")
+                //        successCount++;
 
-                    //保存日志
-                    await _transferLogRepository.InsertAsync(new TransferLog()
-                    {
-                        BatchNo = batchNo,
-                        Para = JsonConvert.SerializeObject(m),
-                        Response = JsonConvert.SerializeObject(response),
-                        Type = TransferLogType.Student,
-                        CreateTime = DateTime.Now
-                    });
-                }
+                //    //保存日志
+                //    await _transferLogRepository.InsertAsync(new TransferLog()
+                //    {
+                //        BatchNo = batchNo,
+                //        Para = JsonConvert.SerializeObject(m),
+                //        Response = JsonConvert.SerializeObject(response),
+                //        Type = TransferLogType.Student,
+                //        CreateTime = DateTime.Now
+                //    });
+                //}
                 return $"Student Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
             }
             catch (Exception ex)
@@ -496,6 +527,27 @@ namespace DataTransfer.Application.CrmServices
                 return "error";
             }
         }
+        /// <summary>
+        /// 检测班级时长
+        /// </summary>
+        /// <param name="productType"></param>
+        /// <param name="branchId"></param>
+        /// <param name="clasStatus"></param>
+        /// <param name="beginTimeDate"></param>
+        /// <param name="endTimeDate"></param>
+        /// <returns></returns>
+        public async Task<List<int?>> DetectClassHourAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate)
+        {
+            return await _classCourseRepository
+                .Where(e =>
+                e.Product.Prod_Type == productType
+                && e.Clas_BranID == branchId
+                && e.Clas_Status == clasStatus
+                && e.Clas_Deleted == 0
+                && e.Clas_ActualBeginDate > beginTimeDate
+                && e.Clas_ActualBeginDate <= endTimeDate
+                ).Select(e => e.Clas_ClassHour).Distinct().ToListAsync();
+        }
 
         #region 私有方法
         /// <summary>
@@ -512,7 +564,7 @@ namespace DataTransfer.Application.CrmServices
             return await _productRepository.FirstOrDefaultAsync(e => e.Prod_Name == newName);
         }
         /// <summary>
-        /// 获取班级的当前
+        /// 获取班级的当前级别（逻辑正确）
         /// </summary>
         /// <param name="cc"></param>
         /// <returns></returns>
@@ -521,31 +573,43 @@ namespace DataTransfer.Application.CrmServices
             var plCount = Convert.ToInt32(Math.Round((decimal)cc.Clas_ClassHour * 3 / 42));
             var plNames = await GetProductLevelsOfClassAsync(cc, plCount);
             var waitHour = cc.ClassSchedules.Count(e => e.Clsc_Status == 0 && e.Clsc_Deleted == 0);
-            var startIndex = plNames.Count - Convert.ToInt32(Math.Floor((decimal)waitHour * 3 / 42));
-            //这里的判断原因是可能会出现“临界点数据”
-            startIndex = startIndex == 0 ? 1 : startIndex;
-            if (startIndex < 1 || startIndex > plNames.Count)
+            var startIndex = 0;
+            if (waitHour >= plCount * 42)
             {
-                var a = 1;
+                startIndex = 0;
             }
-            return plNames[startIndex - 1];
+            else
+            {
+                startIndex = plCount - Convert.ToInt32(Math.Floor((decimal)waitHour * 3 / 42)) - 1;
+            }
+            startIndex = startIndex < 0 ? 0 : startIndex;
+            return plNames[startIndex];
         }
         /// <summary>
         /// 获取班级剩余课时（逻辑正确）
         /// </summary>
         /// <param name="cc"></param>
         /// <returns></returns>
-        private async Task<int> GetRemainHourOfClass(CrmClassCourse cc)
+        private async Task<int> GetRemainHourOfClassAsync(CrmClassCourse cc)
         {
             var waitHour = cc.ClassSchedules.Count(e => e.Clsc_Status == 0 && e.Clsc_Deleted == 0);
-            return await Task.FromResult((waitHour * 3) % 42);
+            var plCount = Convert.ToInt32(Math.Round((decimal)cc.Clas_ClassHour * 3 / 42));
+            //因为转换后的等级相对之前较小
+            if (waitHour >= plCount * 42)
+            {
+                return 42;
+            }
+            else
+            {
+                return await Task.FromResult((waitHour * 3) % 42);
+            }
         }
         /// <summary>
         /// 获取班级的所有级别
         /// </summary>
         /// <param name="cc"></param>
         /// <returns></returns>
-        private async Task<List<string>> GetProductLevelsOfClassAsync(CrmClassCourse cc, int? plCount=null)
+        private async Task<List<string>> GetProductLevelsOfClassAsync(CrmClassCourse cc, int? plCount = null)
         {
             List<string> plNames = new List<string>();
             var newProduct = await GetNewProductByOriginProductAsync(cc.Product);
@@ -562,16 +626,32 @@ namespace DataTransfer.Application.CrmServices
         }
         /// <summary>
         /// 获取学生的产品级别
+        /// 1】学生至少有一个级别
+        /// 2】学生级别数量取最接近实际的
         /// </summary>
         /// <returns></returns>
-        private async Task<List<string>> GetStudentProductLevelsOfClassAsync(CrmClassCourse cc,CrmClassStudent cs)
+        private async Task<List<string>> GetStudentProductLevelsOfClassAsync(CrmClassCourse cc, CrmClassStudent cs)
         {
-            //学生剩余的整级别
-            var plCount = Convert.ToInt32(Math.Round((decimal)(cs.Clst_ClassHour - cs.Clst_AdjustHour - cs.Clst_FinishHour) * 3 / 42));
-            var allPlNames = await GetProductLevelsOfClassAsync(cc);
+            //学生剩余课时
+            var studentWaitHour = (cs.Clst_ClassHour - cs.Clst_AdjustHour - cs.Clst_FinishHour) * 3;
+            var remainHourOfClass = await GetRemainHourOfClassAsync(cc);
             var currentPlName = await GetCurrentProductLevelOfClassAsync(cc);
+            var allPlNames = await GetProductLevelsOfClassAsync(cc);
             var startIndex = allPlNames.IndexOf(currentPlName);
-            var plNames = allPlNames.Skip(startIndex).Take(plCount + 1).ToList();
+            var plCount = 0;
+            if (studentWaitHour <= remainHourOfClass)
+            {
+                plCount = 1;
+            }
+            else
+            {
+                plCount = Convert.ToInt32(Math.Round((decimal)(studentWaitHour - remainHourOfClass) / 42) + 1);
+            }
+            var plNames = allPlNames.Skip(startIndex).Take(plCount).ToList();
+            if (plNames.Count == 0)
+            {
+                var a = 1;
+            }
             return plNames;
         }
         #endregion

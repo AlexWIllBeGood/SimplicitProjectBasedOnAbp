@@ -50,7 +50,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
         [HttpPost]
         public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRE()
         {
-            return await _classService.SendStudentToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"));
+            return await _classService.SendStudentToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"), "0,1");
         }
 
         /// <summary>
@@ -59,7 +59,8 @@ namespace DataTransfer.HttpApi.Host.Controllers
         [HttpPost]
         public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRO()
         {
-            return await _classService.SendStudentToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"));
+            return await _classService.SendStudentToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "0,1");
+
         }
 
         /// <summary>
@@ -91,6 +92,24 @@ namespace DataTransfer.HttpApi.Host.Controllers
         public async Task<string> AddTeacherNameAsync()
         {
             return await _classService.AddTeacherNameAsync();
+        }
+        /// <summary>
+        /// 检测范围班级的课次数
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<List<int?>> DetectClassHourAsync_FZ_NCE_PRE()
+        {
+            return await _classService.DetectClassHourAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"));
+        }
+        /// <summary>
+        /// 检测范围班级的课次数
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<List<int?>> DetectClassHourAsync_FZ_NCE_PRO()
+        {
+            return await _classService.DetectClassHourAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"));
         }
         #endregion
 

@@ -44,5 +44,17 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.DetectClassHourAsync_FZ_NCE_PRE">
+            <summary>
+            检测范围班级的课次数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.DetectClassHourAsync_FZ_NCE_PRO">
+            <summary>
+            检测范围班级的课次数
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>
