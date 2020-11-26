@@ -255,7 +255,7 @@ namespace DataTransfer.Application.CrmServices
         /// 发送学生合同信息到MTS
         /// </summary>
         /// <returns></returns>
-        public async Task<string> SendStudentToMtsAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate, string classStatus)
+        public async Task<string> SendStudentToMtsAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate, string classStatus,bool needJoinClass=true)
         {
             try
             {
@@ -324,10 +324,6 @@ namespace DataTransfer.Application.CrmServices
                 List<CrmStudentInfoModel> models = new List<CrmStudentInfoModel>();
                 foreach (var cg in contractGroups)
                 {
-                    if (cg.Cont_LeadId == 982844)
-                    {
-                        var a = 1;
-                    }
                     var cs = classStudents.FirstOrDefault(e =>
                     e.Clst_LeadID == cg.Cont_LeadId
                     && e.Clst_ClassID == cg.Cont_ClassId
@@ -410,6 +406,7 @@ namespace DataTransfer.Application.CrmServices
                         var newTotalHour = cs.Clst_FinishHour * 3 + newWaitHour;
                         model.remark = $"{DateTime.Now.ToString("yyyy年MM月dd日 HH:mm分")}导入，老系统课时{sumClassHour}，老系统完成{cs.Clst_FinishHour * 3}，新系统剩余{newWaitHour}，差额{sumClassHour - newTotalHour}.";
                     }
+                    model.needJoinClass = needJoinClass;
                     models.Add(model);
                 }
                 var successCount = 0;

@@ -181,5 +181,9 @@ namespace DataTransfer.Domain.Entities.Temp
         /// 备注
         /// </summary>
         public string remark { get; set; }
+        /// <summary>
+        /// 是否加入班级
+        /// </summary>
+        public bool needJoinClass { get; set; };
     }
 }

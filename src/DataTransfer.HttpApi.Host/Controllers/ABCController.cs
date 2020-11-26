@@ -57,9 +57,18 @@ namespace DataTransfer.HttpApi.Host.Controllers
         /// FZ_NCE_PRO
         /// </summary>
         [HttpPost]
-        public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRO()
+        public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRO_IN_CLASS()
         {
-            return await _classService.SendStudentToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "0,1");
+            return await _classService.SendStudentToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "0,1", true);
+
+        }
+        /// <summary>
+        /// FZ_NCE_PRO
+        /// </summary>
+        [HttpPost]
+        public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRO_OUT_CLASS()
+        {
+            return await _classService.SendStudentToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "4", false);
 
         }
 
