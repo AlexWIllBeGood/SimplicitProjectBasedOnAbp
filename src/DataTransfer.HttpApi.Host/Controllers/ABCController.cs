@@ -25,6 +25,39 @@ namespace DataTransfer.HttpApi.Host.Controllers
             this._classService = classService;
         }
         /// <summary>
+        /// 处理方庄新概念产品
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<string> HandleNewNCE_FZ()
+        {
+            var productTypeId = 3;
+            var branchId = 101005000;
+            var beginDate = Convert.ToDateTime("2000-11-01");
+            var currentDate = Convert.ToDateTime("2020-11-01");
+            var endDate = Convert.ToDateTime("2040-11-01");
+            var defaultSA = "jennifer_jy";
+            var defaultFT = "muham_mjm";
+            var defaultLT = "doris_zq";
+            var classStatus_Normal = "0,1";
+            var classStatus_Stop = "4";
+
+            //导入预售班级
+            var result1 = await _classService.SendClassToMtsAsync(productTypeId, branchId, 1, currentDate, endDate, defaultSA, defaultFT, defaultLT);
+            //导入已开班班级
+            var result2 = await _classService.SendClassToMtsAsync(productTypeId, branchId, 2, beginDate,currentDate, defaultSA, defaultFT, defaultLT);
+            //导入预售班学生
+            var result3 = await _classService.SendStudentToMtsAsync(productTypeId, branchId, 1, currentDate, endDate, classStatus_Normal);
+            //导入已开班学生（入班）
+            var result4 = await _classService.SendStudentToMtsAsync(productTypeId, branchId, 2, beginDate, currentDate, classStatus_Normal, true);
+            //导入已开班学生（不入班）
+            var result5 = await _classService.SendStudentToMtsAsync(productTypeId, branchId, 2, beginDate, currentDate, classStatus_Stop, false);
+            //设置班级进度
+            var result6 = await _classService.SetClassProcessAsync(productTypeId, branchId, 2, beginDate, currentDate);
+
+            return $"PreClass:{result1}/r/nPostClass:{result2}/r/nPreStudent:{result3}/r/nPostClassIn:{result4}/r/nPostClassOut:{result5}/r/nSetClass:{result6}/r/n";
+        }
+        /// <summary>
         /// FZ_NCE_PRE
         /// </summary>
         /// <returns></returns>

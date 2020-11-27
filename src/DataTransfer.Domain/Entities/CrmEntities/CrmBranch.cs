@@ -48,17 +48,17 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 类型（预留）
         /// </summary>
-        public int Bran_Type { get; set; }
+        public int? Bran_Type { get; set; }
 
         /// <summary>
         /// 深度
         /// </summary>
-        public int Bran_Depth { get; set; }
+        public int? Bran_Depth { get; set; }
 
         /// <summary>
         /// 支付宝支付账号配置
         /// </summary>
-        public int Bran_AliPaySetting { get; set; }
+        public int? Bran_AliPaySetting { get; set; }
 
         /// <summary>
         /// 支付宝支付账号配置名称
@@ -69,7 +69,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// 微信支付账号配置
         /// </summary>
-        public int Bran_WxPaySetting { get; set; }
+        public int? Bran_WxPaySetting { get; set; }
 
         /// <summary>
         /// 微信支付账号配置名称
@@ -107,7 +107,7 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         /// <summary>
         /// SapID
         /// </summary>
-        public int Bran_SapId { get; set; }
+        public int? Bran_SapId { get; set; }
 
         /// <summary>
         /// POS机上线日期

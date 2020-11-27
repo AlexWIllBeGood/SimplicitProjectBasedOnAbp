@@ -8,10 +8,18 @@ namespace DataTransfer.Domain.Entities.LocalEntities
 {
     public class TransferLog : Entity<int>
     {
+        public TransferLog()
+        {
+            this.TransferLogDetails = new List<TransferLogDetail>();
+        }
         /// <summary>
         /// 数据批次号码
         /// </summary>
         public string BatchNo { get; set; }
+        /// <summary>
+        /// 记录数
+        /// </summary>
+        public int Count { get; set; }
         /// <summary>
         /// 产品类型信息
         /// </summary>

@@ -31,6 +31,23 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                     b.ToTable("AddCoupan");
                 });
 
+            modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.ClassHourLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Hour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClassHourLevel");
+                });
+
             modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.ClassRelation", b =>
                 {
                     b.Property<int>("Id")
@@ -103,13 +120,16 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                     b.Property<string>("BatchNo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("BranchInfo")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Para")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Response")
+                    b.Property<string>("ProductTypeInfo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("Type")
@@ -118,6 +138,43 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TransferLog");
+                });
+
+            modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.TransferLogDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClassInfo")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("LeadInfo")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Para")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Response")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("TransferLogId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransferLogId");
+
+                    b.ToTable("TransferLogDetail");
+                });
+
+            modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.TransferLogDetail", b =>
+                {
+                    b.HasOne("DataTransfer.Domain.Entities.LocalEntities.TransferLog", "TransferLog")
+                        .WithMany("TransferLogDetails")
+                        .HasForeignKey("TransferLogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

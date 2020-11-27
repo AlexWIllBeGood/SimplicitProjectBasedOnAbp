@@ -188,6 +188,7 @@ namespace DataTransfer.Application.CrmServices
                         ClassInfo = $"{c.ClassTypeId}-{c.ClassCName}"
                     });
                 }
+                transferLog.Count = transferLog.TransferLogDetails.Count;
                 await _transferLogRepository.InsertAsync(transferLog);
                 return $"Class Trasfer info:Total:{clsses.Count} Success:{successCount} Fail:{clsses.Count - successCount}";
             }
@@ -262,6 +263,7 @@ namespace DataTransfer.Application.CrmServices
                     ClassInfo = $"{m.ClassId}-{m.LessonPeriod}"
                 });
             }
+            transferLog.Count = transferLog.TransferLogDetails.Count;
             //保存日志
             await _transferLogRepository.InsertAsync(transferLog);
             return $"ClassProcessSet Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
@@ -450,6 +452,7 @@ namespace DataTransfer.Application.CrmServices
                         ClassInfo = $"{m.classId}"
                     });
                 }
+                transferLog.Count = transferLog.TransferLogDetails.Count;
                 //保存日志
                 await _transferLogRepository.InsertAsync(transferLog);
                 return $"Student Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";

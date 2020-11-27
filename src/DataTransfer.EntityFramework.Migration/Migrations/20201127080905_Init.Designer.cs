@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataTransfer.EntityFramework.DbMigrations.Migrations
 {
     [DbContext(typeof(LocalMySqlMigrationDbContext))]
-    [Migration("20201120110451_addClassTeacher1")]
-    partial class addClassTeacher1
+    [Migration("20201127080905_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,6 +31,23 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                     b.HasKey("OrderId");
 
                     b.ToTable("AddCoupan");
+                });
+
+            modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.ClassHourLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Hour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClassHourLevel");
                 });
 
             modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.ClassRelation", b =>
@@ -56,19 +73,19 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("BranchId")
+                    b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("BranchName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("ClassId")
+                    b.Property<int?>("ClassId")
                         .HasColumnType("int");
 
                     b.Property<string>("ClassName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("TeacherId")
+                    b.Property<int?>("TeacherId")
                         .HasColumnType("int");
 
                     b.Property<string>("TeacherName")
@@ -105,13 +122,13 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                     b.Property<string>("BatchNo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("BranchInfo")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Para")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Response")
+                    b.Property<string>("ProductTypeInfo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("Type")
@@ -120,6 +137,43 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TransferLog");
+                });
+
+            modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.TransferLogDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClassInfo")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("LeadInfo")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Para")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Response")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("TransferLogId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransferLogId");
+
+                    b.ToTable("TransferLogDetail");
+                });
+
+            modelBuilder.Entity("DataTransfer.Domain.Entities.LocalEntities.TransferLogDetail", b =>
+                {
+                    b.HasOne("DataTransfer.Domain.Entities.LocalEntities.TransferLog", "TransferLog")
+                        .WithMany("TransferLogDetails")
+                        .HasForeignKey("TransferLogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
