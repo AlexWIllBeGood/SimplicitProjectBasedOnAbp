@@ -21,7 +21,12 @@
             FZ_NCE_PRE
             </summary>
         </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendStudentToMtsAsync_FZ_NCE_PRO">
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendStudentToMtsAsync_FZ_NCE_PRO_IN_CLASS">
+            <summary>
+            FZ_NCE_PRO
+            </summary>
+        </member>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendStudentToMtsAsync_FZ_NCE_PRO_OUT_CLASS">
             <summary>
             FZ_NCE_PRO
             </summary>

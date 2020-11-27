@@ -74,6 +74,7 @@ namespace DataTransfer.Application.CrmServices
         {
             try
             {
+                var branch =await _branchRepository.FirstOrDefaultAsync(e => e.Bran_ID == branchId);
                 var targetClasses = await _classCourseRepository
                 .Include(e => e.ClassSchedules)
                 .Include(e => e.Product)
@@ -147,6 +148,15 @@ namespace DataTransfer.Application.CrmServices
 
                 DateTime now = DateTime.Now;
                 string batchNo = $"{DataTransferConst.ClassTransferNo}{now.ToString("yyyyMMddHHmmss")}";
+
+                TransferLog transferLog = new TransferLog()
+                {
+                    BatchNo = batchNo,
+                    BranchInfo = $"{branch.Bran_ID}-{branch.Bran_Name}-{branch.Bran_SapId}",
+                    ProductTypeInfo = $"{productType}",
+                    Type = TransferLogType.Class,
+                    CreateTime = DateTime.Now
+                };
                 foreach (var c in clsses)
                 {
                     var response = HttpHelper.PostAsync<ClassMRTSResponseEntity>(_classOptions.CurrentValue.ClassSendMTSUrl, c);
@@ -172,15 +182,13 @@ namespace DataTransfer.Application.CrmServices
                         }
                     }
                     //保存日志
-                    await _transferLogRepository.InsertAsync(new TransferLog()
-                    {
-                        BatchNo = batchNo,
+                    transferLog.TransferLogDetails.Add(new TransferLogDetail() {
                         Para = JsonConvert.SerializeObject(c),
                         Response = JsonConvert.SerializeObject(response),
-                        Type = TransferLogType.Class,
-                        CreateTime = DateTime.Now
+                        ClassInfo = $"{c.ClassTypeId}-{c.ClassCName}"
                     });
                 }
+                await _transferLogRepository.InsertAsync(transferLog);
                 return $"Class Trasfer info:Total:{clsses.Count} Success:{successCount} Fail:{clsses.Count - successCount}";
             }
             catch (Exception ex)
@@ -200,6 +208,7 @@ namespace DataTransfer.Application.CrmServices
         /// <returns></returns>
         public async Task<string> SetClassProcessAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate)
         {
+            var branch = await _branchRepository.FirstOrDefaultAsync(e => e.Bran_ID == branchId);
             var targetClasses = await _classCourseRepository
                 .Include(e => e.ClassSchedules)
                 .Include(e => e.Product)
@@ -233,22 +242,28 @@ namespace DataTransfer.Application.CrmServices
             var successCount = 0;
             DateTime now = DateTime.Now;
             string batchNo = $"{DataTransferConst.ProcessTransferNo}{now.ToString("yyyyMMddHHmmss")}";
+            TransferLog transferLog = new TransferLog() { 
+                BatchNo= batchNo,
+                BranchInfo = $"{branch.Bran_ID}-{branch.Bran_Name}-{branch.Bran_SapId}",
+                ProductTypeInfo = $"{productType}",
+                Type = TransferLogType.ClassProcess,
+                CreateTime = DateTime.Now
+            };
             foreach (var m in models)
             {
                 var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.ClassProcessSetUrl, m);
                 if (response.ResultCode == "000000")
                     successCount++;
-
                 //保存日志
-                await _transferLogRepository.InsertAsync(new TransferLog()
+                transferLog.TransferLogDetails.Add(new TransferLogDetail()
                 {
-                    BatchNo = batchNo,
                     Para = JsonConvert.SerializeObject(m),
                     Response = JsonConvert.SerializeObject(response),
-                    Type = TransferLogType.ClassProcess,
-                    CreateTime = DateTime.Now
+                    ClassInfo = $"{m.ClassId}-{m.LessonPeriod}"
                 });
             }
+            //保存日志
+            await _transferLogRepository.InsertAsync(transferLog);
             return $"ClassProcessSet Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
         }
         /// <summary>
@@ -259,6 +274,7 @@ namespace DataTransfer.Application.CrmServices
         {
             try
             {
+                var branch = await _branchRepository.FirstOrDefaultAsync(e => e.Bran_ID == branchId);
                 var targetClasses = await _classCourseRepository
                     .Include(e => e.ClassStudents)
                     .Include(e => e.ClassSchedules)
@@ -350,7 +366,7 @@ namespace DataTransfer.Application.CrmServices
                     var lead = contract.Lead;
                     var classCourse = contract.ClassCourse;
                     var cc = order.CC;
-                    var branch = lead.Branch;
+                    //var branch = lead.Branch;
                     var product = await GetNewProductByOriginProductAsync(contract.Product);
                     var productLevels = await GetStudentProductLevelsOfClassAsync(tc, cs);
                     var beginLevel = productLevels[0];
@@ -412,22 +428,30 @@ namespace DataTransfer.Application.CrmServices
                 var successCount = 0;
                 DateTime now = DateTime.Now;
                 string batchNo = $"{DataTransferConst.StudentTransferNo}{now.ToString("yyyyMMddHHmmss")}";
-                //foreach (var m in models)
-                //{
-                //    var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
-                //    if (response.ResultCode == "000000")
-                //        successCount++;
+                TransferLog transferLog = new TransferLog()
+                {
+                    BatchNo = batchNo,
+                    BranchInfo = $"{branch.Bran_ID}-{branch.Bran_Name}-{branch.Bran_SapId}",
+                    ProductTypeInfo = $"{productType}",
+                    Type = TransferLogType.ClassProcess,
+                    CreateTime = DateTime.Now
+                };
+                foreach (var m in models)
+                {
+                    var response = HttpHelper.PostAsync<CommonMTSResponseEntity>(_classOptions.CurrentValue.OrderSendMTSUrl, m);
+                    if (response.ResultCode == "000000")
+                        successCount++;
 
-                //    //保存日志
-                //    await _transferLogRepository.InsertAsync(new TransferLog()
-                //    {
-                //        BatchNo = batchNo,
-                //        Para = JsonConvert.SerializeObject(m),
-                //        Response = JsonConvert.SerializeObject(response),
-                //        Type = TransferLogType.Student,
-                //        CreateTime = DateTime.Now
-                //    });
-                //}
+                    transferLog.TransferLogDetails.Add(new TransferLogDetail()
+                    {
+                        Para = JsonConvert.SerializeObject(m),
+                        Response = JsonConvert.SerializeObject(response),
+                        LeadInfo = $"{m.cName}-{m.mobile}",
+                        ClassInfo = $"{m.classId}"
+                    });
+                }
+                //保存日志
+                await _transferLogRepository.InsertAsync(transferLog);
                 return $"Student Trasfer info:Total:{models.Count} Success:{successCount} Fail:{models.Count - successCount}";
             }
             catch (Exception ex)

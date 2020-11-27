@@ -31,6 +31,12 @@ namespace DataTransfer.EntityFramework
             builder.Entity<TransferLog>(options => {
                 options.ConfigureByConvention();
                 options.ToTable("TransferLog");
+                options.HasMany<TransferLogDetail>().WithOne(e => e.TransferLog).HasForeignKey(e => e.TransferLogId).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            builder.Entity<TransferLogDetail>(options => {
+                options.ConfigureByConvention();
+                options.ToTable("TransferLogDetail");
             });
 
             builder.Entity<ClassTeacher>(options => {
