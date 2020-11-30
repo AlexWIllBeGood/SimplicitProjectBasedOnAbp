@@ -16,13 +16,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Uow;
 
 namespace DataTransfer.Application.CrmServices
 {
     public class CourseService : ApplicationService
     {
-        private const int NewConceptProd = 3;
-        private const string ClassCode_FZ_NCE = "FZ-LNCE";
         private readonly IOptionsMonitor<CRMOptions> _classOptions;
         private readonly ClassCourseRepository _classCourseRepository;
         private readonly ProductLevelRepository _productLevelRepository;
@@ -70,6 +69,7 @@ namespace DataTransfer.Application.CrmServices
         /// 发送班级数据到MTS
         /// </summary>
         /// <returns></returns>
+        [UnitOfWork]
         public async Task<string> SendClassToMtsAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate, string SAId, string FTId, string LTId)
         {
             try
@@ -105,6 +105,10 @@ namespace DataTransfer.Application.CrmServices
                 foreach (var tc in targetClasses)
                 {
                     var product = await GetNewProductByOriginProductAsync(tc.Product);
+                    if (product == null)
+                    {
+                        var a = 0;
+                    }
                     var model = new ClassSendMtsModel();
                     model.SchoolId = tc.Branch.Bran_SapId;
                     model.ProductId = product.Prod_Type;
@@ -207,6 +211,7 @@ namespace DataTransfer.Application.CrmServices
         /// <param name="beginTimeDate"></param>
         /// <param name="endTimeDate"></param>
         /// <returns></returns>
+        [UnitOfWork]
         public async Task<string> SetClassProcessAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate)
         {
             var branch = await _branchRepository.FirstOrDefaultAsync(e => e.Bran_ID == branchId);
@@ -272,6 +277,7 @@ namespace DataTransfer.Application.CrmServices
         /// 发送学生合同信息到MTS
         /// </summary>
         /// <returns></returns>
+        [UnitOfWork]
         public async Task<string> SendStudentToMtsAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate, string classStatus,bool needJoinClass=true)
         {
             try
@@ -435,7 +441,7 @@ namespace DataTransfer.Application.CrmServices
                     BatchNo = batchNo,
                     BranchInfo = $"{branch.Bran_ID}-{branch.Bran_Name}-{branch.Bran_SapId}",
                     ProductTypeInfo = $"{productType}",
-                    Type = TransferLogType.ClassProcess,
+                    Type = TransferLogType.Student,
                     CreateTime = DateTime.Now
                 };
                 foreach (var m in models)
@@ -459,13 +465,14 @@ namespace DataTransfer.Application.CrmServices
             }
             catch (Exception ex)
             {
-                throw;
+                return ex.Message;
             }
         }
         /// <summary>
         /// 添加教师名称
         /// </summary>
         /// <returns></returns>
+        [UnitOfWork]
         public async Task<string> AddTeacherNameAsync()
         {
             var cts = await _classTeacherRepository
@@ -496,6 +503,7 @@ namespace DataTransfer.Application.CrmServices
         /// 查找对应教师，班级数据
         /// </summary>
         /// <returns></returns>
+        [UnitOfWork]
         public async Task<string> FindTeacherClassAsync()
         {
             try
@@ -548,7 +556,7 @@ namespace DataTransfer.Application.CrmServices
             catch (Exception ex)
             {
 
-                return "error";
+                return ex.Message;
             }
         }
         /// <summary>
@@ -560,6 +568,7 @@ namespace DataTransfer.Application.CrmServices
         /// <param name="beginTimeDate"></param>
         /// <param name="endTimeDate"></param>
         /// <returns></returns>
+        [UnitOfWork]
         public async Task<List<int?>> DetectClassHourAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate)
         {
             return await _classCourseRepository
@@ -584,6 +593,11 @@ namespace DataTransfer.Application.CrmServices
             var newName = (await _productRelationRepository.FirstOrDefaultAsync(
                 e => e.OriginalProductName == product.Prod_Name.Replace(" ", "")
                 ))?.NewProductName;
+
+            if (string.IsNullOrEmpty(newName))
+            {
+                var a = 1;
+            }
 
             return await _productRepository.FirstOrDefaultAsync(e => e.Prod_Name == newName);
         }

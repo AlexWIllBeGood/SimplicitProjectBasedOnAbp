@@ -4,6 +4,12 @@
         <name>DataTransfer.HttpApi.Host</name>
     </assembly>
     <members>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.HandleNewNCE_FZ">
+            <summary>
+            处理方庄新概念产品
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendClassToMtsAsync_FZ_NCE_PRE">
             <summary>
             FZ_NCE_PRE
