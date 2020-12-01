@@ -28,7 +28,6 @@ namespace DataTransfer.Application.CrmServices
         private readonly IOptionsMonitor<CRMOptions> _classOptions;
         private readonly IClassCourseRepository _classCourseRepository;
         private readonly IProductLevelRepository _productLevelRepository;
-        private readonly ILeadRepository _leadRepository;
         private readonly IProductRepository _productRepository;
         private readonly IProductRelationRepository _productRelationRepository;
         private readonly IContractRepository _contractRepository;
@@ -37,12 +36,10 @@ namespace DataTransfer.Application.CrmServices
         private readonly IClassTeacherRepository _classTeacherRepository;
         private readonly IUserRepository _userRepository;
         private readonly IBranchRepository _branchRepository;
-        private readonly IClassHourLevelRepository _classHourLevelRepository;
         public CourseService(
             IOptionsMonitor<CRMOptions> classOptions,
             IClassCourseRepository classCourseRepository,
             IProductLevelRepository productLevelRepository,
-            ILeadRepository leadRepository,
             IContractRepository contractRepository,
             IProductRepository productRepository,
             IProductRelationRepository productRelationRepository,
@@ -50,14 +47,12 @@ namespace DataTransfer.Application.CrmServices
             ITransferLogRepository transferLogRepository,
             IClassTeacherRepository classTeacherRepository,
             IUserRepository userRepository,
-            IBranchRepository branchRepository,
-            IClassHourLevelRepository classHourLevelRepository
+            IBranchRepository branchRepository
             )
         {
             this._classOptions = classOptions;
             this._classCourseRepository = classCourseRepository;
             this._productLevelRepository = productLevelRepository;
-            this._leadRepository = leadRepository;
             this._contractRepository = contractRepository;
             this._productRepository = productRepository;
             this._productRelationRepository = productRelationRepository;
@@ -66,7 +61,6 @@ namespace DataTransfer.Application.CrmServices
             this._classTeacherRepository = classTeacherRepository;
             this._userRepository = userRepository;
             this._branchRepository = branchRepository;
-            this._classHourLevelRepository = classHourLevelRepository;
         }
 
         #region
