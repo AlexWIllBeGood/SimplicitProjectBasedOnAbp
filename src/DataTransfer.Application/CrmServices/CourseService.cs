@@ -65,6 +65,9 @@ namespace DataTransfer.Application.CrmServices
             this._branchRepository = branchRepository;
             this._classHourLevelRepository = classHourLevelRepository;
         }
+
+        #region
+        #endregion
         /// <summary>
         /// 发送班级数据到MTS
         /// </summary>

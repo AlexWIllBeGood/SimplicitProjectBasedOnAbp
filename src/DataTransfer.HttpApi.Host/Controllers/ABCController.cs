@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DataTransfer.Application;
 using DataTransfer.Application.CrmServices;
 using DataTransfer.Domain.Entities.Coupan;
+using DataTransfer.Infrastructure.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp.Domain.Repositories;
@@ -23,6 +24,12 @@ namespace DataTransfer.HttpApi.Host.Controllers
         {
             this._coupanService = coupanService;
             this._classService = classService;
+        }
+        [HttpPost]
+        public FileContentResult ExportFile()
+        {
+            var fileContent = ExcelHelper.Export("TempSheet");
+            return File(fileContent, ExcelHelper.ExcelContentType, "table.xlsx");
         }
         /// <summary>
         /// 处理方庄新概念产品
