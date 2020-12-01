@@ -3,6 +3,8 @@ using DataTransfer.Domain;
 using DataTransfer.Domain.Entities.CrmEntities;
 using DataTransfer.Domain.Entities.LocalEntities;
 using DataTransfer.Domain.Entities.Temp;
+using DataTransfer.Domain.IRepositories.ICrmRepositories;
+using DataTransfer.Domain.IRepositories.ILocalRepositories;
 using DataTransfer.Domain.Shared.Enums;
 using DataTransfer.EntityFramework.Repositories;
 using DataTransfer.EntityFramework.Repositories.CrmRepositories;
@@ -16,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Uow;
 
 namespace DataTransfer.Application.CrmServices
@@ -23,32 +26,32 @@ namespace DataTransfer.Application.CrmServices
     public class CourseService : ApplicationService
     {
         private readonly IOptionsMonitor<CRMOptions> _classOptions;
-        private readonly ClassCourseRepository _classCourseRepository;
-        private readonly ProductLevelRepository _productLevelRepository;
-        private readonly LeadRepository _leadRepository;
-        private readonly ProductRepository _productRepository;
-        private readonly ProductRelationRepository _productRelationRepository;
-        private readonly ContractRepository _contractRepository;
-        private readonly ClassRelationRepository _classRelationRepository;
-        private readonly TransferLogRepository _transferLogRepository;
-        private readonly ClassTeacherRepository _classTeacherRepository;
-        private readonly UserRepository _userRepository;
-        private readonly BranchRepository _branchRepository;
-        private readonly ClassHourLevelRepository _classHourLevelRepository;
+        private readonly IClassCourseRepository _classCourseRepository;
+        private readonly IProductLevelRepository _productLevelRepository;
+        private readonly ILeadRepository _leadRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IProductRelationRepository _productRelationRepository;
+        private readonly IContractRepository _contractRepository;
+        private readonly IClassRelationRepository _classRelationRepository;
+        private readonly ITransferLogRepository _transferLogRepository;
+        private readonly IClassTeacherRepository _classTeacherRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IBranchRepository _branchRepository;
+        private readonly IClassHourLevelRepository _classHourLevelRepository;
         public CourseService(
             IOptionsMonitor<CRMOptions> classOptions,
-            ClassCourseRepository classCourseRepository,
-            ProductLevelRepository productLevelRepository,
-            LeadRepository leadRepository,
-            ContractRepository contractRepository,
-            ProductRepository productRepository,
-            ProductRelationRepository productRelationRepository,
-            ClassRelationRepository classRelationRepository,
-            TransferLogRepository transferLogRepository,
-            ClassTeacherRepository classTeacherRepository,
-            UserRepository userRepository,
-            BranchRepository branchRepository,
-            ClassHourLevelRepository classHourLevelRepository
+            IClassCourseRepository classCourseRepository,
+            IProductLevelRepository productLevelRepository,
+            ILeadRepository leadRepository,
+            IContractRepository contractRepository,
+            IProductRepository productRepository,
+            IProductRelationRepository productRelationRepository,
+            IClassRelationRepository classRelationRepository,
+            ITransferLogRepository transferLogRepository,
+            IClassTeacherRepository classTeacherRepository,
+            IUserRepository userRepository,
+            IBranchRepository branchRepository,
+            IClassHourLevelRepository classHourLevelRepository
             )
         {
             this._classOptions = classOptions;
