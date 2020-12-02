@@ -10,63 +10,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendClassToMtsAsync_FZ_NCE_PRE">
-            <summary>
-            FZ_NCE_PRE
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendClassToMtsAsync_FZ_NCE_PRO">
-            <summary>
-            FZ_NCE_PRO
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendStudentToMtsAsync_FZ_NCE_PRE">
-            <summary>
-            FZ_NCE_PRE
-            </summary>
-        </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendStudentToMtsAsync_FZ_NCE_PRO_IN_CLASS">
-            <summary>
-            FZ_NCE_PRO
-            </summary>
-        </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SendStudentToMtsAsync_FZ_NCE_PRO_OUT_CLASS">
-            <summary>
-            FZ_NCE_PRO
-            </summary>
-        </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.SetClassProcessAsync_FZ_NCE_PRO">
-            <summary>
-            FZ_NCE_PRO
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.FindTeacherClassAsync">
-            <summary>
-            查找老师班级ID
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.AddTeacherNameAsync">
-            <summary>
-            添加中教师信息
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.DetectClassHourAsync_FZ_NCE_PRE">
-            <summary>
-            检测范围班级的课次数
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ABCController.DetectClassHourAsync_FZ_NCE_PRO">
-            <summary>
-            检测范围班级的课次数
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:DataTransfer.HttpApi.Host.Controllers.ReportController.ExportStudentAndClassInfo(System.String,System.String,System.DateTime)">
             <summary>
             导出学生老师信息

@@ -102,10 +102,10 @@ namespace DataTransfer.Application.CrmServices
                 .ThenInclude(e => e.CC)
                 .Where(e => classIds.Contains((int)e.Cont_ClassId)
                 && e.Cont_Status == 2
-                && e.Cont_LeadId != null
-                && e.Cont_ProductID != null
-                && e.Cont_OrderID != null
-                && e.Cont_ClassId != null
+                && (e.Cont_LeadId != null && e.Cont_LeadId != 0)
+                && (e.Cont_ProductID != null && e.Cont_ProductID != 0)
+                && (e.Cont_OrderID != null && e.Cont_OrderID != 0)
+                && (e.Cont_ClassId != null && e.Cont_ClassId != 0)
                 && e.Cont_Deleted == 0
                 )
                 .ToList();

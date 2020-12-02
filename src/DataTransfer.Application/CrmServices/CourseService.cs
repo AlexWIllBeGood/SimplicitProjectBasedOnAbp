@@ -74,7 +74,7 @@ namespace DataTransfer.Application.CrmServices
         {
             try
             {
-                var branch =await _branchRepository.FirstOrDefaultAsync(e => e.Bran_ID == branchId);
+                var branch = await _branchRepository.FirstOrDefaultAsync(e => e.Bran_ID == branchId);
                 var targetClasses = await _classCourseRepository
                 .Include(e => e.ClassSchedules)
                 .Include(e => e.Product)
@@ -186,7 +186,8 @@ namespace DataTransfer.Application.CrmServices
                         }
                     }
                     //保存日志
-                    transferLog.TransferLogDetails.Add(new TransferLogDetail() {
+                    transferLog.TransferLogDetails.Add(new TransferLogDetail()
+                    {
                         Para = JsonConvert.SerializeObject(c),
                         Response = JsonConvert.SerializeObject(response),
                         ClassInfo = $"{c.ClassTypeId}-{c.ClassCName}"
@@ -249,8 +250,9 @@ namespace DataTransfer.Application.CrmServices
             var successCount = 0;
             DateTime now = DateTime.Now;
             string batchNo = $"{DataTransferConst.ProcessTransferNo}{now.ToString("yyyyMMddHHmmss")}";
-            TransferLog transferLog = new TransferLog() { 
-                BatchNo= batchNo,
+            TransferLog transferLog = new TransferLog()
+            {
+                BatchNo = batchNo,
                 BranchInfo = $"{branch.Bran_ID}-{branch.Bran_Name}-{branch.Bran_SapId}",
                 ProductTypeInfo = $"{productType}",
                 Type = TransferLogType.ClassProcess,
@@ -279,7 +281,7 @@ namespace DataTransfer.Application.CrmServices
         /// </summary>
         /// <returns></returns>
         [UnitOfWork]
-        public async Task<string> SendStudentToMtsAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate, string classStatus,bool needJoinClass=true)
+        public async Task<string> SendStudentToMtsAsync(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate, string classStatus, bool needJoinClass = true)
         {
             try
             {
@@ -318,10 +320,10 @@ namespace DataTransfer.Application.CrmServices
                     .ThenInclude(e => e.CC)
                     .Where(e => classIds.Contains((int)e.Cont_ClassId)
                     && e.Cont_Status == 2
-                    && e.Cont_LeadId != null
-                    && e.Cont_ProductID != null
-                    && e.Cont_OrderID != null
-                    && e.Cont_ClassId != null
+                    && (e.Cont_LeadId != null && e.Cont_LeadId != 0)
+                    && (e.Cont_ProductID != null && e.Cont_ProductID != 0)
+                    && (e.Cont_OrderID != null && e.Cont_OrderID != 0)
+                    && (e.Cont_ClassId != null && e.Cont_ClassId != 0)
                     && e.Cont_Deleted == 0
                     )
                     .ToList();
@@ -427,7 +429,7 @@ namespace DataTransfer.Application.CrmServices
                     else if (clasStatus == 2)
                     {
                         var classWaitHour = await GetRemainHourOfClassAsync(tc);
-                        var newWaitHour= classWaitHour + (productLevels.Count - 1) * 42;
+                        var newWaitHour = classWaitHour + (productLevels.Count - 1) * 42;
                         var newTotalHour = cs.Clst_FinishHour * 3 + newWaitHour;
                         model.remark = $"{DateTime.Now.ToString("yyyy年MM月dd日 HH:mm分")}导入，老系统课时{sumClassHour}，老系统完成{cs.Clst_FinishHour * 3}，新系统剩余{newWaitHour}，差额{sumClassHour - newTotalHour}.";
                     }
