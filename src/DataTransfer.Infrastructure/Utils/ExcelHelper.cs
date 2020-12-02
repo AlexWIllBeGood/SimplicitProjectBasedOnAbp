@@ -25,17 +25,18 @@ namespace DataTransfer.Infrastructure.Utils
             {
                 foreach (var ep in exportParams)
                 {
-                    ExcelWorksheet sheet = package.Workbook.Worksheets.Add(ep.SheetName);
-                    var jsonData = JsonConvert.SerializeObject(ep.Data);
-                    List<JObject> objs = JsonConvert.DeserializeObject<List<JObject>>(jsonData);
-
                     if (ep.ColumnCnNames == null)
                     {
                         ep.ColumnCnNames = ep.ColumnEnNames;
                     }
 
+                    var jsonData = JsonConvert.SerializeObject(ep.Data);
+                    List<JObject> objs = JsonConvert.DeserializeObject<List<JObject>>(jsonData);
+
                     int columnsCount = ep.ColumnEnNames.Count;
                     int rowCount = objs.Count;
+
+                    ExcelWorksheet sheet = package.Workbook.Worksheets.Add($"ep.SheetName({rowCount})");
 
                     //设置标题
                     for (int i = 0; i < columnsCount; i++)
