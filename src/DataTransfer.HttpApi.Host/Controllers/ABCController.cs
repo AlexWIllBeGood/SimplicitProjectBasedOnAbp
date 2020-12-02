@@ -20,12 +20,12 @@ namespace DataTransfer.HttpApi.Host.Controllers
         private readonly CoupanService _coupanService;
         private readonly CourseService _classService;
 
-        public ABCController(CoupanService coupanService,CourseService classService)
+        public ABCController(CoupanService coupanService, CourseService classService)
         {
             this._coupanService = coupanService;
             this._classService = classService;
         }
-        
+
         /// <summary>
         /// 处理方庄新概念产品
         /// </summary>
@@ -47,7 +47,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
             //导入预售班级
             var result1 = await _classService.SendClassToMtsAsync(productTypeId, branchId, 1, currentDate, endDate, defaultSA, defaultFT, defaultLT);
             //导入已开班班级
-            var result2 = await _classService.SendClassToMtsAsync(productTypeId, branchId, 2, beginDate,currentDate, defaultSA, defaultFT, defaultLT);
+            var result2 = await _classService.SendClassToMtsAsync(productTypeId, branchId, 2, beginDate, currentDate, defaultSA, defaultFT, defaultLT);
             //导入预售班学生
             var result3 = await _classService.SendStudentToMtsAsync(productTypeId, branchId, 1, currentDate, endDate, classStatus_Normal);
             //导入已开班学生（入班）
@@ -59,11 +59,12 @@ namespace DataTransfer.HttpApi.Host.Controllers
 
             return $"PreClass:{result1}\r\nPostClass:{result2}\r\nPreStudent:{result3}\r\nPostClassIn:{result4}\r\nPostClassOut:{result5}\r\nSetClass:{result6}\r\n";
         }
+
         /// <summary>
         /// FZ_NCE_PRE
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        //[HttpPost]
         //public async Task<string> SendClassToMtsAsync_FZ_NCE_PRE()
         //{
         //    return await _classService.SendClassToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
@@ -118,11 +119,11 @@ namespace DataTransfer.HttpApi.Host.Controllers
         //    return $"{classSetInfo}";
         //}
 
-        #region 添加老师信息
-        /// <summary>
-        /// 查找老师班级ID
-        /// </summary>
-        /// <returns></returns>
+        //#region 添加老师信息
+        ///// <summary>
+        ///// 查找老师班级ID
+        ///// </summary>
+        ///// <returns></returns>
         //[HttpPost]
         //public async Task<string> FindTeacherClassAsync()
         //{
@@ -155,7 +156,8 @@ namespace DataTransfer.HttpApi.Host.Controllers
         //{
         //    return await _classService.DetectClassHourAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"));
         //}
-        #endregion
+        //#endregion
+
 
     }
 }
