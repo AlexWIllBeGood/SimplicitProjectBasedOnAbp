@@ -24,6 +24,7 @@ namespace DataTransfer.EntityFramework
         public DbSet<CrmUser> CrmUsers { get; set; }
         public DbSet<CrmClassStudent> CrmClassStudents { get; set; }
         public DbSet<CrmClassSchedule> CrmClassSchedules { get; set; }
+        public DbSet<CrmProductType> CrmProductTypes { get; set; }
         public ABCCrmDbContext(DbContextOptions<ABCCrmDbContext> options) : base(options)
         {
 

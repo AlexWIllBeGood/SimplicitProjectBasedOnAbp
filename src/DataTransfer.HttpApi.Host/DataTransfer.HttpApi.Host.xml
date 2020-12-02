@@ -67,5 +67,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ReportController.ExportStudentAndClassInfo(System.String,System.String,System.DateTime)">
+            <summary>
+            导出学生老师信息
+            </summary>
+            <param name="productTypeName">产品中文名称</param>
+            <param name="branchName">中心中文名称</param>
+            <param name="currentDate">日期（可不填，默认当前）</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

@@ -194,6 +194,7 @@ namespace DataTransfer.Application.CrmServices
                 }
                 transferLog.Count = transferLog.TransferLogDetails.Count;
                 await _transferLogRepository.InsertAsync(transferLog);
+                await CurrentUnitOfWork.SaveChangesAsync();
                 return $"Class Trasfer info:Total:{clsses.Count} Success:{successCount} Fail:{clsses.Count - successCount}";
             }
             catch (Exception ex)

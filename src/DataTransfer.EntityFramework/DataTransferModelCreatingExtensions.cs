@@ -119,6 +119,12 @@ namespace DataTransfer.EntityFramework
                 //options.ConfigureByConvention();
                 options.ToTable("ClassSchedule");
             });
+
+            builder.Entity<CrmProductType>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("ProductType");
+            });
         }
     }
 }

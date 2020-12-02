@@ -25,12 +25,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
             this._coupanService = coupanService;
             this._classService = classService;
         }
-        [HttpPost]
-        public FileContentResult ExportFile()
-        {
-            var fileContent = ExcelHelper.Export("TempSheet");
-            return File(fileContent, ExcelHelper.ExcelContentType, "table.xlsx");
-        }
+        
         /// <summary>
         /// 处理方庄新概念产品
         /// </summary>
@@ -62,66 +57,66 @@ namespace DataTransfer.HttpApi.Host.Controllers
             //设置班级进度
             var result6 = await _classService.SetClassProcessAsync(productTypeId, branchId, 2, beginDate, currentDate);
 
-            return $"PreClass:{result1}/r/nPostClass:{result2}/r/nPreStudent:{result3}/r/nPostClassIn:{result4}/r/nPostClassOut:{result5}/r/nSetClass:{result6}/r/n";
+            return $"PreClass:{result1}\r\nPostClass:{result2}\r\nPreStudent:{result3}\r\nPostClassIn:{result4}\r\nPostClassOut:{result5}\r\nSetClass:{result6}\r\n";
         }
         /// <summary>
         /// FZ_NCE_PRE
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<string> SendClassToMtsAsync_FZ_NCE_PRE()
-        {
-            return await _classService.SendClassToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
-        }
-        /// <summary>
-        /// FZ_NCE_PRO
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<string> SendClassToMtsAsync_FZ_NCE_PRO()
-        {
-            var classInfo= await _classService.SendClassToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
-            return $"{classInfo}";
-        }
+        //public async Task<string> SendClassToMtsAsync_FZ_NCE_PRE()
+        //{
+        //    return await _classService.SendClassToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
+        //}
+        ///// <summary>
+        ///// FZ_NCE_PRO
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public async Task<string> SendClassToMtsAsync_FZ_NCE_PRO()
+        //{
+        //    var classInfo= await _classService.SendClassToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
+        //    return $"{classInfo}";
+        //}
 
-        /// <summary>
-        /// FZ_NCE_PRE
-        /// </summary>
-        [HttpPost]
-        public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRE()
-        {
-            return await _classService.SendStudentToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"), "0,1");
-        }
+        ///// <summary>
+        ///// FZ_NCE_PRE
+        ///// </summary>
+        //[HttpPost]
+        //public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRE()
+        //{
+        //    return await _classService.SendStudentToMtsAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"), "0,1");
+        //}
 
-        /// <summary>
-        /// FZ_NCE_PRO
-        /// </summary>
-        [HttpPost]
-        public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRO_IN_CLASS()
-        {
-            return await _classService.SendStudentToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "0,1", true);
+        ///// <summary>
+        ///// FZ_NCE_PRO
+        ///// </summary>
+        //[HttpPost]
+        //public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRO_IN_CLASS()
+        //{
+        //    return await _classService.SendStudentToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "0,1", true);
 
-        }
-        /// <summary>
-        /// FZ_NCE_PRO
-        /// </summary>
-        [HttpPost]
-        public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRO_OUT_CLASS()
-        {
-            return await _classService.SendStudentToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "4", false);
+        //}
+        ///// <summary>
+        ///// FZ_NCE_PRO
+        ///// </summary>
+        //[HttpPost]
+        //public async Task<string> SendStudentToMtsAsync_FZ_NCE_PRO_OUT_CLASS()
+        //{
+        //    return await _classService.SendStudentToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "4", false);
 
-        }
+        //}
 
-        /// <summary>
-        /// FZ_NCE_PRO
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<string> SetClassProcessAsync_FZ_NCE_PRO()
-        {
-            var classSetInfo = await _classService.SetClassProcessAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"));
-            return $"{classSetInfo}";
-        }
+        ///// <summary>
+        ///// FZ_NCE_PRO
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public async Task<string> SetClassProcessAsync_FZ_NCE_PRO()
+        //{
+        //    var classSetInfo = await _classService.SetClassProcessAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"));
+        //    return $"{classSetInfo}";
+        //}
 
         #region 添加老师信息
         /// <summary>
