@@ -102,7 +102,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
                 }
                 }
                 );
-            return File(fileContent, ExcelHelper.ExcelContentType, $"Student&Classes({branch.Bran_Name}{productType.Prot_Name}).xlsx");
+            return File(fileContent, ExcelHelper.ExcelContentType, $"Student&Classes({branch.Bran_Name}_{productType.Prot_Name}).xlsx");
         }
     }
 }

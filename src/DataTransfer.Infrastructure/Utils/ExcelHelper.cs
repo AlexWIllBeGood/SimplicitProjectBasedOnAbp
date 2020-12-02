@@ -36,7 +36,7 @@ namespace DataTransfer.Infrastructure.Utils
                     int columnsCount = ep.ColumnEnNames.Count;
                     int rowCount = objs.Count;
 
-                    ExcelWorksheet sheet = package.Workbook.Worksheets.Add($"ep.SheetName({rowCount})");
+                    ExcelWorksheet sheet = package.Workbook.Worksheets.Add($"{ep.SheetName}({rowCount})");
 
                     //设置标题
                     for (int i = 0; i < columnsCount; i++)
