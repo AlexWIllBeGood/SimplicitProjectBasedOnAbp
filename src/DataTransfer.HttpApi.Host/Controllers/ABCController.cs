@@ -123,38 +123,38 @@ namespace DataTransfer.HttpApi.Host.Controllers
         /// 查找老师班级ID
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
-        public async Task<string> FindTeacherClassAsync()
-        {
-            return await _classService.FindTeacherClassAsync();
-        }
-        /// <summary>
-        /// 添加中教师信息
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<string> AddTeacherNameAsync()
-        {
-            return await _classService.AddTeacherNameAsync();
-        }
-        /// <summary>
-        /// 检测范围班级的课次数
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<List<int?>> DetectClassHourAsync_FZ_NCE_PRE()
-        {
-            return await _classService.DetectClassHourAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"));
-        }
-        /// <summary>
-        /// 检测范围班级的课次数
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<List<int?>> DetectClassHourAsync_FZ_NCE_PRO()
-        {
-            return await _classService.DetectClassHourAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"));
-        }
+        //[HttpPost]
+        //public async Task<string> FindTeacherClassAsync()
+        //{
+        //    return await _classService.FindTeacherClassAsync();
+        //}
+        ///// <summary>
+        ///// 添加中教师信息
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public async Task<string> AddTeacherNameAsync()
+        //{
+        //    return await _classService.AddTeacherNameAsync();
+        //}
+        ///// <summary>
+        ///// 检测范围班级的课次数
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public async Task<List<int?>> DetectClassHourAsync_FZ_NCE_PRE()
+        //{
+        //    return await _classService.DetectClassHourAsync(3, 101005000, 1, Convert.ToDateTime("2020-11-01"), Convert.ToDateTime("2040-11-01"));
+        //}
+        ///// <summary>
+        ///// 检测范围班级的课次数
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public async Task<List<int?>> DetectClassHourAsync_FZ_NCE_PRO()
+        //{
+        //    return await _classService.DetectClassHourAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"));
+        //}
         #endregion
 
     }
