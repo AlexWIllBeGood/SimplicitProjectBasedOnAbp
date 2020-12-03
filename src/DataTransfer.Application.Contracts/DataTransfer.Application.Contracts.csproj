@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataTransfer.Domain.Shared\DataTransfer.Domain.Shared.csproj" />
+    <ProjectReference Include="..\DataTransfer.Domain\DataTransfer.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

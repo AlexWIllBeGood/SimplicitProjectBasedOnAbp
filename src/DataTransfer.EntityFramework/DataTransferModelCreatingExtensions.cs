@@ -13,39 +13,46 @@ namespace DataTransfer.EntityFramework
     {
         public static void ConfigureLocal(this ModelBuilder builder)
         {
-            builder.Entity<AddCoupan>(options=> {
+            builder.Entity<AddCoupan>(options =>
+            {
                 options.ConfigureByConvention();
                 options.ToTable("AddCoupan");
             });
 
-            builder.Entity<ProductRelation>(options => {
+            builder.Entity<ProductRelation>(options =>
+            {
                 options.ConfigureByConvention();
                 options.ToTable("ProductRelation");
             });
 
-            builder.Entity<ClassRelation>(options => {
+            builder.Entity<ClassRelation>(options =>
+            {
                 options.ConfigureByConvention();
                 options.ToTable("ClassRelation");
             });
 
-            builder.Entity<TransferLog>(options => {
+            builder.Entity<TransferLog>(options =>
+            {
                 options.ConfigureByConvention();
                 options.ToTable("TransferLog");
                 options.HasMany(e => e.TransferLogDetails).WithOne(e => e.TransferLog).HasForeignKey(e => e.TransferLogId).IsRequired(true).OnDelete(DeleteBehavior.Cascade);
             });
 
-            builder.Entity<TransferLogDetail>(options => {
+            builder.Entity<TransferLogDetail>(options =>
+            {
                 options.ConfigureByConvention();
                 options.ToTable("TransferLogDetail");
 
             });
 
-            builder.Entity<ClassTeacher>(options => {
+            builder.Entity<ClassTeacher>(options =>
+            {
                 options.ConfigureByConvention();
                 options.ToTable("ClassTeacher");
             });
 
-            builder.Entity<ClassHourLevel>(options => {
+            builder.Entity<ClassHourLevel>(options =>
+            {
                 options.ConfigureByConvention();
                 options.ToTable("ClassHourLevel");
             });
@@ -125,6 +132,19 @@ namespace DataTransfer.EntityFramework
                 //options.ConfigureByConvention();
                 options.ToTable("ProductType");
             });
+
+            builder.Entity<CrmCaption>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("Basis_Captions");
+            });
+
+            builder.Entity<CrmProductSubType>(options =>
+            {
+                //options.ConfigureByConvention();
+                options.ToTable("ProductSubType");
+            });
+            
         }
     }
 }

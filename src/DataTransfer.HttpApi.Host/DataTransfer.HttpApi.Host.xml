@@ -10,6 +10,17 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:DataTransfer.HttpApi.Host.Controllers.ProductController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ProductController.ConfigureProduct">
+            <summary>
+            配置产品
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:DataTransfer.HttpApi.Host.Controllers.ReportController.ExportStudentAndClassInfo(System.String,System.String,System.DateTime)">
             <summary>
             导出学生老师信息

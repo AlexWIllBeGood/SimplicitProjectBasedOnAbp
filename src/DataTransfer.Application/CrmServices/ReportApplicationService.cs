@@ -12,7 +12,7 @@ using Volo.Abp.Application.Services;
 
 namespace DataTransfer.Application.CrmServices
 {
-    public class ReportApplicationService : ApplicationService, IReportApplicationService
+    public class ReportApplicationService : BaseApplicationService, IReportApplicationService
     {
         private readonly IClassCourseRepository _classCourseRepository;
         private readonly IBranchRepository _branchRepository;

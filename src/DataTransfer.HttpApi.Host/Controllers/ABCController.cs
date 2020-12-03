@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DataTransfer.Application;
 using DataTransfer.Application.CrmServices;
 using DataTransfer.Domain.Entities.Coupan;
+using DataTransfer.Domain.Entities.Temp;
 using DataTransfer.Infrastructure.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -76,7 +77,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
         //[HttpPost]
         //public async Task<string> SendClassToMtsAsync_FZ_NCE_PRO()
         //{
-        //    var classInfo= await _classService.SendClassToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
+        //    var classInfo = await _classService.SendClassToMtsAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"), "jennifer_jy", "muham_mjm", "doris_zq");
         //    return $"{classInfo}";
         //}
 
@@ -157,7 +158,6 @@ namespace DataTransfer.HttpApi.Host.Controllers
         //    return await _classService.DetectClassHourAsync(3, 101005000, 2, Convert.ToDateTime("2000-11-01"), Convert.ToDateTime("2020-11-01"));
         //}
         //#endregion
-
 
     }
 }

@@ -14,6 +14,10 @@ namespace DataTransfer.Domain.Entities.CrmEntities
     //[NPoco.PrimaryKey("Prot_ID", AutoIncrement = true)]
     public class CrmProductType: IEntity<int>
     {
+        public CrmProductType()
+        {
+            this.ProductSubTypes = new List<CrmProductSubType>();
+        }
         [Key]
         /// <summary>
         /// 大类ID
@@ -111,5 +115,9 @@ namespace DataTransfer.Domain.Entities.CrmEntities
         {
             throw new NotImplementedException();
         }
+
+        #region 导航属性
+        public virtual ICollection<CrmProductSubType> ProductSubTypes { get; set; }
+        #endregion
     }
 }
