@@ -99,5 +99,12 @@ namespace DataTransfer.HttpApi.Host.Controllers
                 );
             return File(fileContent, ExcelHelper.ExcelContentType, $"Student&Classes({branch.Bran_Name}_{productType.Prot_Name}).xlsx");
         }
+
+        [HttpPost]
+        public async Task TestEs()
+        {
+            List<string> temp = new List<string>() { "s1", "s2", "s3", "s4" };
+            temp.ToES<string>("");
+        }
     }
 }
