@@ -29,14 +29,14 @@ namespace DataTransfer.HttpApi.Host.Controllers
         [HttpPost]
         public async Task<string> ConfigureProduct()
         {
-            return await this._productApplicationService.ConfigureProduct("New_J", "进阶英语New", new List<ProductOption>() {
+            return await this._productApplicationService.ConfigureProduct("NEW_J", "进阶英语NEW", new List<ProductOption>() {
                 new ProductOption(){ Clas_PeriodType="全周",Clas_ScaleType="大班",Clas_TeacherType="全中"},
                 new ProductOption(){ Clas_PeriodType="全周",Clas_ScaleType="小班",Clas_TeacherType="全中"},
                 new ProductOption(){ Clas_PeriodType="周末",Clas_ScaleType="小班",Clas_TeacherType="中外"},
                 new ProductOption(){ Clas_PeriodType="周中",Clas_ScaleType="小班",Clas_TeacherType="中外"},
                 new ProductOption(){ Clas_PeriodType="周末",Clas_ScaleType="中班",Clas_TeacherType="中外"},
                 new ProductOption(){ Clas_PeriodType="周中",Clas_ScaleType="中班",Clas_TeacherType="中外"},
-            }, "New_J", "New_J", 8, "New_J", "进阶 1-8 册", 11);
+            }, "NEW_J", "NEW_J", 8, "NEW_J", "进阶 1-8 册", 11);
         }
     }
 }

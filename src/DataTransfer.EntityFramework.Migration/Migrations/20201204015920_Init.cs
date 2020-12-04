@@ -88,6 +88,7 @@ namespace DataTransfer.EntityFramework.DbMigrations.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     BatchNo = table.Column<string>(nullable: true),
+                    Count = table.Column<int>(nullable: false),
                     ProductTypeInfo = table.Column<string>(nullable: true),
                     BranchInfo = table.Column<string>(nullable: true),
                     Type = table.Column<int>(nullable: false),

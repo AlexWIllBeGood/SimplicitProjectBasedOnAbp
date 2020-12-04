@@ -36,5 +36,9 @@ namespace DataTransfer.Application.CrmServices
         public string OrderSendMTSUrl { get; set; }
         public string MTSPlatformKey { get; set; }
     }
+    public class ESOptions
+    {
+        public string BaseLocalUrl { get; set; }
+    }
     #endregion
 }

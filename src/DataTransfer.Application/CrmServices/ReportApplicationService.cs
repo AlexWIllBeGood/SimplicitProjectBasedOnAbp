@@ -1,14 +1,12 @@
 ﻿using DataTransfer.Application.Contracts.IApplicationServices;
 using DataTransfer.Domain.Entities.CrmEntities;
 using DataTransfer.Domain.IRepositories.ICrmRepositories;
+using DataTransfer.Domain.IServices;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Volo.Abp.Application.Services;
 
 namespace DataTransfer.Application.CrmServices
 {
@@ -17,11 +15,21 @@ namespace DataTransfer.Application.CrmServices
         private readonly IClassCourseRepository _classCourseRepository;
         private readonly IBranchRepository _branchRepository;
         private readonly IContractRepository _contractRepository;
-        public ReportApplicationService(IClassCourseRepository classCourseRepository, IBranchRepository branchRepository, IContractRepository contractRepository)
+        private readonly IClassDomainService _classDomainService;
+        public ReportApplicationService(
+            IClassCourseRepository classCourseRepository, 
+            IBranchRepository branchRepository, 
+            IContractRepository contractRepository,
+            IClassDomainService classDomainService)
         {
             this._classCourseRepository = classCourseRepository;
             this._branchRepository = branchRepository;
             this._contractRepository = contractRepository;
+            this._classDomainService = classDomainService;
+        }
+        public async Task TestBranch()
+        {
+            var temp = await _branchRepository.FirstOrDefaultAsync();
         }
         /// <summary>
         /// 获取班级筛选范围
@@ -34,26 +42,8 @@ namespace DataTransfer.Application.CrmServices
         /// <returns></returns>
         public async Task<dynamic> GetClassRange(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate)
         {
-            var targetClasses = await _classCourseRepository
-                .Include(e => e.ClassSchedules)
-                .Include(e => e.Product)
-                .Include(e => e.Branch)
-                .Include(e => e.SA)
-                .Include(e => e.LT)
-                .Include(e => e.FT)
-                .Include(e => e.ClassStudents)
-                .Where(e =>
-                e.Product.Prod_Type == productType
-                && e.Clas_BranID == branchId
-                && e.Clas_Status == clasStatus
-                && e.Clas_Deleted == 0
-                && e.Clas_ActualBeginDate > beginTimeDate
-                && e.Clas_ActualBeginDate <= endTimeDate
-                )
-                .Select(e => new { e.Clas_Name, e.Product.Prod_Name, e.Clas_Code })
-                .ToListAsync();
-
-            return targetClasses;
+            var targetClasses = await _classDomainService.GetClassCourseRange(productType, branchId, clasStatus, beginTimeDate, endTimeDate);
+            return targetClasses.Select(e => new { e.Clas_Name, e.Product.Prod_Name, e.Clas_Code }).ToList();
         }
         /// <summary>
         /// 获取学生筛选范围
@@ -68,17 +58,7 @@ namespace DataTransfer.Application.CrmServices
         public async Task<dynamic> GetStudentRange(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate, string classStatus)
         {
             var branch = await _branchRepository.FirstOrDefaultAsync(e => e.Bran_ID == branchId);
-            var targetClasses = await _classCourseRepository
-                .Include(e => e.ClassStudents)
-                .Include(e => e.ClassSchedules)
-                .Where(e =>
-                e.Product.Prod_Type == productType
-                && e.Clas_BranID == branchId
-                && e.Clas_Status == clasStatus
-                && e.Clas_Deleted == 0
-                && e.Clas_ActualBeginDate > beginTimeDate
-                && e.Clas_ActualBeginDate <= endTimeDate
-                ).ToListAsync();
+            var targetClasses = await _classDomainService.GetClassCourseRange(productType, branchId, clasStatus, beginTimeDate, endTimeDate);
             var classIds = targetClasses.Select(e => e.Clas_ID).ToList();
             List<CrmClassStudent> classStudents;
             if (string.IsNullOrEmpty(classStatus))

@@ -13,7 +13,7 @@ using static DataTransfer.Infrastructure.Utils.ExcelHelper;
 
 namespace DataTransfer.HttpApi.Host.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ReportController : ControllerBase
     {
@@ -26,13 +26,12 @@ namespace DataTransfer.HttpApi.Host.Controllers
             this._branchRepository = branchRepository;
             this._productTypeRepository = productTypeRepository;
         }
-
         /// <summary>
         /// 导出学生老师信息
         /// </summary>
         /// <param name="productTypeName">产品中文名称</param>
         /// <param name="branchName">中心中文名称</param>
-        /// <param name="currentDate">日期（可不填，默认当前）</param>
+        /// <param name="currentDate">日期</param>
         /// <returns></returns>
         [HttpPost]
         public async Task<FileContentResult> ExportStudentAndClassInfo(string productTypeName, string branchName, DateTime currentDate)
@@ -54,10 +53,6 @@ namespace DataTransfer.HttpApi.Host.Controllers
             var branchId = branch.Bran_ID;
             var beginDate = Convert.ToDateTime("2000-01-01");
             var endDate = Convert.ToDateTime("2100-01-01");
-            if (currentDate == null)
-            {
-                currentDate = DateTime.Now;
-            }
 
             var classStatus_Normal = "0,1";
             var classStatus_Stop = "4";

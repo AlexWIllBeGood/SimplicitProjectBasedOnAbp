@@ -15,7 +15,6 @@ namespace DataTransfer.Application.CrmServices
         {
             this._productDomainService = productDomainService;
         }
-
         /// <summary>
         /// 配置产品
         /// </summary>

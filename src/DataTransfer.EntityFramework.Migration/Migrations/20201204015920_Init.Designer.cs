@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataTransfer.EntityFramework.DbMigrations.Migrations
 {
     [DbContext(typeof(LocalMySqlMigrationDbContext))]
-    [Migration("20201127084257_changeLog")]
-    partial class changeLog
+    [Migration("20201204015920_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

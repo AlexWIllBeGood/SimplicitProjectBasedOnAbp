@@ -38,6 +38,7 @@ namespace DataTransfer.HttpApi.Host
         {
             //配置Crm配置
             context.Services.ConfigureOptions<CRMOptions>(configuration.GetSection("CRMSettings"));
+            context.Services.ConfigureOptions<ESOptions>(configuration.GetSection("ElasticSearchSettings"));
         }
         public void ConfigureSwagger(ServiceConfigurationContext context)
         {

@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataTransfer.Application;
+using DataTransfer.Application.Contracts.IApplicationServices;
 using DataTransfer.Application.CrmServices;
 using DataTransfer.Domain.Entities.Coupan;
+using DataTransfer.Domain.Entities.CrmEntities;
 using DataTransfer.Domain.Entities.Temp;
+using DataTransfer.Domain.IRepositories.ICrmRepositories;
+using DataTransfer.Domain.IServices;
 using DataTransfer.Infrastructure.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +20,26 @@ namespace DataTransfer.HttpApi.Host.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class ABCController : ControllerBase
+    public class StudentClassController : ControllerBase
     {
-        private readonly CoupanService _coupanService;
-        private readonly CourseService _classService;
+        //private readonly CoupanService _coupanService;
+        //private readonly ICourseService _courseService;
+        private readonly IClassDomainService _classDomainService;
+        private readonly IReportApplicationService _reportApplicationService;
+        private readonly IClassStudentApplicationService _classStudentApplicationService;
 
-        public ABCController(CoupanService coupanService, CourseService classService)
+        public StudentClassController(
+            //CoupanService coupanService, 
+            //CourseService courseService, 
+            IClassDomainService classDomainService,
+            IReportApplicationService reportApplicationService,
+            IClassStudentApplicationService classStudentApplicationService)
         {
-            this._coupanService = coupanService;
-            this._classService = classService;
+            //this._coupanService = coupanService;
+            //this._courseService = courseService;
+            this._classDomainService = classDomainService;
+            this._reportApplicationService = reportApplicationService;
+            this._classStudentApplicationService = classStudentApplicationService;
         }
 
         /// <summary>
@@ -32,31 +47,50 @@ namespace DataTransfer.HttpApi.Host.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<string> HandleNewNCE_FZ()
+        public async Task<string> Handle()
         {
-            var productTypeId = 3;
+            //方庄新概念
+            //var productTypeId = 3;
+            //var branchId = 101005000;
+            //var classPerLevel= 42;
+            //var defaultSA = "jennifer_jy";
+            //var defaultFT = "muham_mjm";
+            //var defaultLT = "doris_zq";
+            //var currentDate = Convert.ToDateTime("2020-11-01");
+
+            //方庄进阶
+            var productTypeId = 2;
             var branchId = 101005000;
-            var beginDate = Convert.ToDateTime("2000-11-01");
-            var currentDate = Convert.ToDateTime("2020-11-01");
-            var endDate = Convert.ToDateTime("2040-11-01");
+            var classPerLevel = 48;
             var defaultSA = "jennifer_jy";
             var defaultFT = "muham_mjm";
             var defaultLT = "doris_zq";
-            var classStatus_Normal = "0,1";
-            var classStatus_Stop = "4";
+            var currentDate = Convert.ToDateTime("2020-12-04");
 
+
+            var beginDate = Convert.ToDateTime("2000-01-01");
+            var endDate = Convert.ToDateTime("2100-01-01");
+            var classStudentStatus_Normal = "0,1";
+            var classStudentStatus_Stop = "4";
+            var classStatus_pre = 1;
+            var classStatus_pro = 2;
+
+            //预售班范围
+            var preClasses = await _classDomainService.GetClassCourseRange(productTypeId, branchId, classStatus_pre, currentDate, endDate);
+            //在读班范围
+            var proClasses = await _classDomainService.GetClassCourseRange(productTypeId, branchId, classStatus_pro, beginDate, currentDate);
             //导入预售班级
-            var result1 = await _classService.SendClassToMtsAsync(productTypeId, branchId, 1, currentDate, endDate, defaultSA, defaultFT, defaultLT);
+            var result1 = await _classStudentApplicationService.SendClassToMtsAsync(productTypeId, branchId, preClasses, classPerLevel, defaultSA, defaultFT, defaultLT);
             //导入已开班班级
-            var result2 = await _classService.SendClassToMtsAsync(productTypeId, branchId, 2, beginDate, currentDate, defaultSA, defaultFT, defaultLT);
-            //导入预售班学生
-            var result3 = await _classService.SendStudentToMtsAsync(productTypeId, branchId, 1, currentDate, endDate, classStatus_Normal);
-            //导入已开班学生（入班）
-            var result4 = await _classService.SendStudentToMtsAsync(productTypeId, branchId, 2, beginDate, currentDate, classStatus_Normal, true);
-            //导入已开班学生（不入班）
-            var result5 = await _classService.SendStudentToMtsAsync(productTypeId, branchId, 2, beginDate, currentDate, classStatus_Stop, false);
-            //设置班级进度
-            var result6 = await _classService.SetClassProcessAsync(productTypeId, branchId, 2, beginDate, currentDate);
+            var result2 = await _classStudentApplicationService.SendClassToMtsAsync(productTypeId, branchId, proClasses, classPerLevel, defaultSA, defaultFT, defaultLT);
+            ////导入预售班学生
+            var result3 = await _classStudentApplicationService.SendStudentToMtsAsync(productTypeId, branchId, preClasses, classPerLevel, classStatus_pre, classStudentStatus_Normal);
+            ////导入已开班学生（入班）
+            var result4 = await _classStudentApplicationService.SendStudentToMtsAsync(productTypeId, branchId, proClasses, classPerLevel, classStatus_pro, classStudentStatus_Normal, true);
+            ////导入已开班学生（不入班）
+            var result5 = await _classStudentApplicationService.SendStudentToMtsAsync(productTypeId, branchId, proClasses, classPerLevel, classStatus_pro, classStudentStatus_Stop, false);
+            ////设置班级进度
+            var result6 = await _classStudentApplicationService.SetClassProcessAsync(productTypeId, branchId, proClasses);
 
             return $"PreClass:{result1}\r\nPostClass:{result2}\r\nPreStudent:{result3}\r\nPostClassIn:{result4}\r\nPostClassOut:{result5}\r\nSetClass:{result6}\r\n";
         }
