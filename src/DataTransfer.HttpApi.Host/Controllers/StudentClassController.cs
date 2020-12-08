@@ -64,7 +64,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
             var classPerLevel = 48;
             var defaultSA = "jennifer_jy";
             var defaultFT = "muham_mjm";
-            var defaultLT = "doris_zq";
+            var defaultLT = "doris_zq"; //基本开班的班级都存在中教信息
             var currentDate = Convert.ToDateTime("2020-12-04");
 
 
@@ -90,7 +90,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
             ////导入已开班学生（不入班）
             var result5 = await _classStudentApplicationService.SendStudentToMtsAsync(productTypeId, branchId, proClasses, classPerLevel, classStatus_pro, classStudentStatus_Stop, false);
             ////设置班级进度
-            var result6 = await _classStudentApplicationService.SetClassProcessAsync(productTypeId, branchId, proClasses);
+            var result6 = await _classStudentApplicationService.SetClassProcessAsync(productTypeId, branchId, proClasses, classPerLevel);
 
             return $"PreClass:{result1}\r\nPostClass:{result2}\r\nPreStudent:{result3}\r\nPostClassIn:{result4}\r\nPostClassOut:{result5}\r\nSetClass:{result6}\r\n";
         }

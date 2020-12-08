@@ -15,7 +15,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:DataTransfer.HttpApi.Host.Controllers.ReportController.ExportStudentAndClassInfo(System.String,System.String,System.DateTime)">
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.ReportController.ExportStudentAndClassInfo(System.String,System.String,System.DateTime,DataTransfer.Domain.Shared.Enums.ExportType)">
             <summary>
             导出学生老师信息
             </summary>

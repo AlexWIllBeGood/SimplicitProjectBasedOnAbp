@@ -56,6 +56,29 @@ namespace DataTransfer.Infrastructure.Utils
             return res;
         }
 
+        public static string Put(string url, object data, Encoding encoding = null)
+        {
+            string body = (data is string) ? (string)data : JsonConvert.SerializeObject(data);
+            HttpContent content = new StringContent(body);
+            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            var res = client.PutAsync(url, content).Result.Content.ReadAsStringAsync().Result;
+            return res;
+        }
+
+        /// <summary>
+        /// Post请求
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="url"></param>
+        /// <param name="data"></param>
+        /// <param name="httpClient"></param>
+        /// <returns></returns>
+        public static T PutAsync<T>(string url, object data)
+        {
+            var strRes = Put(url, data);
+            return JsonConvert.DeserializeObject<T>(strRes);
+        }
+
         /// <summary>
         /// Post请求
         /// </summary>

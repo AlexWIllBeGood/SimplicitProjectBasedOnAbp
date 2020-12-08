@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataTransfer.Application.Contracts.IApplicationServices;
 using DataTransfer.Domain.IRepositories.ICrmRepositories;
+using DataTransfer.Domain.Shared.Enums;
 using DataTransfer.Infrastructure.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
         /// <param name="currentDate">日期</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<FileContentResult> ExportStudentAndClassInfo(string productTypeName, string branchName, DateTime currentDate)
+        public async Task<FileContentResult> ExportStudentAndClassInfo(string productTypeName, string branchName, DateTime currentDate,ExportType exportType=ExportType.Excel)
         {
             var productType = await _productTypeRepository.FirstOrDefaultAsync(e => e.Prot_Name.Contains(productTypeName));
             var branch = await _branchRepository.FirstOrDefaultAsync(e => e.Bran_Name.Contains(branchName));
@@ -67,14 +68,14 @@ namespace DataTransfer.HttpApi.Host.Controllers
                 new List<ExportParam> {
                     new ExportParam() {
                         SheetName="预售班",
-                        ColumnEnNames=new List<string>(){  "Clas_Code","Clas_Name", "Prod_Name",},
-                        ColumnCnNames=new List<string>(){ "班级编号","班级名称", "产品名称", },
+                        ColumnEnNames=new List<string>(){  "Clas_Code","Clas_Name", "Prod_Name","LT","FT","SA"},
+                        ColumnCnNames=new List<string>(){ "班级编号","班级名称", "产品名称","LT","FT","SA" },
                         Data=classPre
                 },
                     new ExportParam() {
                         SheetName="在读班",
-                        ColumnEnNames=new List<string>(){ "Clas_Code","Clas_Name", "Prod_Name"},
-                        ColumnCnNames=new List<string>(){ "班级编号","班级名称", "产品名称" },
+                        ColumnEnNames=new List<string>(){ "Clas_Code","Clas_Name", "Prod_Name","LT","FT","SA"},
+                        ColumnCnNames=new List<string>(){ "班级编号","班级名称", "产品名称","LT","FT","SA" },
                         Data=classPro
                 },
                     new ExportParam() {
@@ -103,8 +104,16 @@ namespace DataTransfer.HttpApi.Host.Controllers
         [HttpPost]
         public async Task TestEs()
         {
-            List<string> temp = new List<string>() { "s1", "s2", "s3", "s4" };
-            temp.ToES<string>("");
+            List<Info> infos = new List<Info>();
+            infos.Add(new Info() { Id=1,Name="Alex"});
+
+            infos.ToES<Info>();
+        }
+
+        public class Info
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
         }
     }
 }

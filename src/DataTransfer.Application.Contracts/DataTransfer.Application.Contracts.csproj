@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Dtos\InputDtos\" />
     <Folder Include="Dtos\OutputDtos\" />
   </ItemGroup>
 

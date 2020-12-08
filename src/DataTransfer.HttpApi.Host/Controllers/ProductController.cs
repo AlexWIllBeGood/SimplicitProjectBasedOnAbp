@@ -36,7 +36,7 @@ namespace DataTransfer.HttpApi.Host.Controllers
                 new ProductOption(){ Clas_PeriodType="周中",Clas_ScaleType="小班",Clas_TeacherType="中外"},
                 new ProductOption(){ Clas_PeriodType="周末",Clas_ScaleType="中班",Clas_TeacherType="中外"},
                 new ProductOption(){ Clas_PeriodType="周中",Clas_ScaleType="中班",Clas_TeacherType="中外"},
-            }, "NEW_J", "NEW_J", 8, "NEW_J", "进阶 1-8 册", 11);
+            }, "NEW_J", "NEW_J", 8, "NEW_J", "进阶 1-8 册", 16);
         }
     }
 }

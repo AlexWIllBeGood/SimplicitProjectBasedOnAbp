@@ -2,6 +2,7 @@
 using DataTransfer.Domain.Entities.CrmEntities;
 using DataTransfer.Domain.IRepositories.ICrmRepositories;
 using DataTransfer.Domain.IServices;
+using DataTransfer.Infrastructure.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace DataTransfer.Application.CrmServices
         public async Task<dynamic> GetClassRange(int productType, int branchId, int clasStatus, DateTime? beginTimeDate, DateTime? endTimeDate)
         {
             var targetClasses = await _classDomainService.GetClassCourseRange(productType, branchId, clasStatus, beginTimeDate, endTimeDate);
-            return targetClasses.Select(e => new { e.Clas_Name, e.Product.Prod_Name, e.Clas_Code }).ToList();
+            return targetClasses.Select(e => new { e.Clas_Name, e.Product.Prod_Name, e.Clas_Code, LT = e.LT?.User_Logon, FT = e.FT?.User_Logon, SA = e.SA?.User_Logon }).ToList();
         }
         /// <summary>
         /// 获取学生筛选范围

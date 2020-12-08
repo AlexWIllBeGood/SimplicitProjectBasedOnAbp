@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataTransfer.Application.Contracts.Dtos.InputDtos
+namespace DataTransfer.Domain.Entities.Temp
 {
     public class ClassSendMtsModel
     {
