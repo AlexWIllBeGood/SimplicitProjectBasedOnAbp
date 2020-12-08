@@ -438,7 +438,7 @@ namespace DataTransfer.Application.CrmServices
                 return plNames[0];
             }
             var startIndex = 0;
-            if (fullHour != 0 && (fullHour % ClassPerLevel == 0))
+            if (fullHour != 0 && fullHour % ClassPerLevel == 0)
             {
                 startIndex = plCount - (fullHour / ClassPerLevel);
             }
@@ -460,7 +460,7 @@ namespace DataTransfer.Application.CrmServices
             var remainHour = 0;
             var fullHour = waitHour * 3;
             //当总课时超过或者是卡在等级上的时候
-            if ((fullHour >= plCount * ClassPerLevel) || (fullHour != 0 && fullHour / ClassPerLevel == 0))
+            if ((fullHour >= plCount * ClassPerLevel) || (fullHour != 0 && fullHour % ClassPerLevel == 0))
             {
                 remainHour = ClassPerLevel;
             }

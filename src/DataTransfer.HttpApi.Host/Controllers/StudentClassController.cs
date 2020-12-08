@@ -76,23 +76,24 @@ namespace DataTransfer.HttpApi.Host.Controllers
             var classStatus_pro = 2;
 
             //预售班范围
-            var preClasses = await _classDomainService.GetClassCourseRange(productTypeId, branchId, classStatus_pre, currentDate, endDate);
-            //在读班范围
+            //var preClasses = await _classDomainService.GetClassCourseRange(productTypeId, branchId, classStatus_pre, currentDate, endDate);
+            ////在读班范围
             var proClasses = await _classDomainService.GetClassCourseRange(productTypeId, branchId, classStatus_pro, beginDate, currentDate);
-            //导入预售班级
-            var result1 = await _classStudentApplicationService.SendClassToMtsAsync(productTypeId, branchId, preClasses, classPerLevel, defaultSA, defaultFT, defaultLT);
-            //导入已开班班级
-            var result2 = await _classStudentApplicationService.SendClassToMtsAsync(productTypeId, branchId, proClasses, classPerLevel, defaultSA, defaultFT, defaultLT);
-            ////导入预售班学生
-            var result3 = await _classStudentApplicationService.SendStudentToMtsAsync(productTypeId, branchId, preClasses, classPerLevel, classStatus_pre, classStudentStatus_Normal);
-            ////导入已开班学生（入班）
-            var result4 = await _classStudentApplicationService.SendStudentToMtsAsync(productTypeId, branchId, proClasses, classPerLevel, classStatus_pro, classStudentStatus_Normal, true);
-            ////导入已开班学生（不入班）
-            var result5 = await _classStudentApplicationService.SendStudentToMtsAsync(productTypeId, branchId, proClasses, classPerLevel, classStatus_pro, classStudentStatus_Stop, false);
+            ////导入预售班级
+            //var result1 = await _classStudentApplicationService.SendClassToMtsAsync(productTypeId, branchId, preClasses, classPerLevel, defaultSA, defaultFT, defaultLT);
+            ////导入已开班班级
+            //var result2 = await _classStudentApplicationService.SendClassToMtsAsync(productTypeId, branchId, proClasses, classPerLevel, defaultSA, defaultFT, defaultLT);
+            //////导入预售班学生
+            //var result3 = await _classStudentApplicationService.SendStudentToMtsAsync(productTypeId, branchId, preClasses, classPerLevel, classStatus_pre, classStudentStatus_Normal);
+            //////导入已开班学生（入班）
+            //var result4 = await _classStudentApplicationService.SendStudentToMtsAsync(productTypeId, branchId, proClasses, classPerLevel, classStatus_pro, classStudentStatus_Normal, true);
+            //////导入已开班学生（不入班）
+            //var result5 = await _classStudentApplicationService.SendStudentToMtsAsync(productTypeId, branchId, proClasses, classPerLevel, classStatus_pro, classStudentStatus_Stop, false);
             ////设置班级进度
             var result6 = await _classStudentApplicationService.SetClassProcessAsync(productTypeId, branchId, proClasses, classPerLevel);
 
-            return $"PreClass:{result1}\r\nPostClass:{result2}\r\nPreStudent:{result3}\r\nPostClassIn:{result4}\r\nPostClassOut:{result5}\r\nSetClass:{result6}\r\n";
+            //return $"PreClass:{result1}\r\nPostClass:{result2}\r\nPreStudent:{result3}\r\nPostClassIn:{result4}\r\nPostClassOut:{result5}\r\nSetClass:{result6}\r\n";
+            return "";
         }
 
         /// <summary>
