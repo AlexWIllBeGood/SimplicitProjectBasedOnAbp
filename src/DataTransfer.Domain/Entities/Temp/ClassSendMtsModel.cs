@@ -6,7 +6,7 @@ namespace DataTransfer.Domain.Entities.Temp
 {
     public class ClassSendMtsModel
     {
-        public string PlatfromKey { get; set; } = "0ca10fdbfc994b6dea8af3c9ea751dd9";
+        public string PlatformKey { get; set; } = "0ca10fdbfc994b6dea8af3c9ea751dd9";
         public bool? IsDTClass { get; set; } = false;
         public bool? IsDTMianClass { get; set; } = false;
         public int? SchoolId { get; set; }

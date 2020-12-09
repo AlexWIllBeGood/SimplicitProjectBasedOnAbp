@@ -5,13 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Uow;
 
 namespace DataTransfer.Application.CrmServices
 {
     public class ProductApplicationService :BaseApplicationService, IProductApplicationService
     {
         private readonly IProductDomainService _productDomainService;
-        public ProductApplicationService(IProductDomainService productDomainService)
+        public ProductApplicationService(
+            IProductDomainService productDomainService,
+            IUnitOfWorkManager unitOfWorkManager ):base(unitOfWorkManager)
         {
             this._productDomainService = productDomainService;
         }

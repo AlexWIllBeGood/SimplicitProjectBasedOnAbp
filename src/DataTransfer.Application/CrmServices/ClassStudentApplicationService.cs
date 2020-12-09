@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp.Uow;
 
 namespace DataTransfer.Application.CrmServices
 {
@@ -37,8 +38,9 @@ namespace DataTransfer.Application.CrmServices
             ITransferLogRepository transferLogRepository,
             IContractRepository contractRepository,
             IProductRepository productRepository,
-            IProductRelationRepository productRelationRepository
-            )
+            IProductRelationRepository productRelationRepository,
+            IUnitOfWorkManager unitOfWorkManager
+            ):base(unitOfWorkManager)
         {
             this._classOptions = classOptions;
             this._branchRepository = branchRepository;
@@ -163,6 +165,7 @@ namespace DataTransfer.Application.CrmServices
                 }
                 transferLog.Count = transferLog.TransferLogDetails.Count;
                 await _transferLogRepository.InsertAsync(transferLog);
+                await _uow.SaveChangesAsync();
                 esLogs.ToES<ESClassLog>();
                 return $"Class Trasfer info:Total:{clsses.Count} Success:{successCount} Fail:{clsses.Count - successCount}";
             }
@@ -172,7 +175,6 @@ namespace DataTransfer.Application.CrmServices
                 return "error";
             }
         }
-
         public async Task<string> SendStudentToMtsAsync(int productType, int branchId, List<CrmClassCourse> targetClasses, int classPerLevel, int clasStatus, string classStudentStatus, bool needJoinClass = true)
         {
             try
@@ -268,7 +270,7 @@ namespace DataTransfer.Application.CrmServices
                     DateTime contractEndTime = contractBeginTime.AddMonths((int)6 * productLevels.Count());
                     CrmStudentInfoModel model = new CrmStudentInfoModel();
 
-                    model.platfromKey = _classOptions.Value.MTSPlatformKey;
+                    model.platformKey = _classOptions.Value.MTSPlatformKey;
                     model.userName = lead?.Lead_LeadID.ToString();
                     model.email = lead?.Lead_Email;
                     model.cName = lead?.Lead_Name;
@@ -301,7 +303,7 @@ namespace DataTransfer.Application.CrmServices
                     model.ccUserName = cc?.User_Logon;
                     model.classId = allClassRelations.FirstOrDefault(e => e.CrmClassId == contract.Cont_ClassId)?.MTSClassId;
                     model.levelCodes = string.Join(",", productLevels);
-                    model.currLevelCodes = currentLevel;
+                    model.currLevelCodes = currentLevel; 
                     model.contractTypeSub = product.Prod_SubTypeID;
                     if (clasStatus == 1)
                     {
@@ -361,7 +363,6 @@ namespace DataTransfer.Application.CrmServices
                 return ex.Message;
             }
         }
-
         public async Task<string> SetClassProcessAsync(int productType, int branchId, List<CrmClassCourse> targetClasses, int classPerLevel)
         {
             var branch = await _branchRepository.FirstOrDefaultAsync(e => e.Bran_ID == branchId);

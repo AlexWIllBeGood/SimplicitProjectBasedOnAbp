@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp.Uow;
 
 namespace DataTransfer.Application.CrmServices
 {
@@ -18,10 +19,11 @@ namespace DataTransfer.Application.CrmServices
         private readonly IContractRepository _contractRepository;
         private readonly IClassDomainService _classDomainService;
         public ReportApplicationService(
-            IClassCourseRepository classCourseRepository, 
-            IBranchRepository branchRepository, 
+            IClassCourseRepository classCourseRepository,
+            IBranchRepository branchRepository,
             IContractRepository contractRepository,
-            IClassDomainService classDomainService)
+            IClassDomainService classDomainService,
+            IUnitOfWorkManager unitofworkManager) : base(unitofworkManager)
         {
             this._classCourseRepository = classCourseRepository;
             this._branchRepository = branchRepository;

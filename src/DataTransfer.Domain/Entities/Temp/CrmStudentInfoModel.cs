@@ -9,7 +9,7 @@ namespace DataTransfer.Domain.Entities.Temp
         /// <summary>
         /// 配置中包含
         /// </summary>
-        public string platfromKey { get; set; } = "";
+        public string platformKey { get; set; } = "";
 
         /// <summary>
         /// 学员帐号
