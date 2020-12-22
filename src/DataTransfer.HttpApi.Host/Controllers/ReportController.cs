@@ -21,11 +21,16 @@ namespace DataTransfer.HttpApi.Host.Controllers
         private readonly IReportApplicationService _reportApplicationService;
         private readonly IBranchRepository _branchRepository;
         private readonly IProductTypeRepository _productTypeRepository;
-        public ReportController(IReportApplicationService reportApplicationService, IBranchRepository branchRepository, IProductTypeRepository productTypeRepository)
+        private readonly ICoupanApplicationService _coupanApplicationService;
+        public ReportController(IReportApplicationService reportApplicationService,
+            IBranchRepository branchRepository,
+            IProductTypeRepository productTypeRepository,
+            ICoupanApplicationService coupanApplicationService)
         {
             this._reportApplicationService = reportApplicationService;
             this._branchRepository = branchRepository;
             this._productTypeRepository = productTypeRepository;
+            this._coupanApplicationService = coupanApplicationService;
         }
         /// <summary>
         /// 导出学生老师信息

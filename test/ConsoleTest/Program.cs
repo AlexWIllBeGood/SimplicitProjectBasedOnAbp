@@ -53,30 +53,62 @@ namespace ConsoleTest
             //    dynamic dObj = obj;
             //}
 
-            List<Temp> temps = new List<Temp>()
-            {
-                new Temp(){ a=5,b=2,c=3},
-                new Temp(){ a=4,b=1,c=4},
-                new Temp(){ a=3,b=3,c=5},
-                new Temp(){ a=5,b=2,c=4},
-                new Temp(){ a=7,b=4,c=9}
-            };
+            //List<Temp> temps = new List<Temp>()
+            //{
+            //    new Temp(){ a=5,b=2,c=3},
+            //    new Temp(){ a=4,b=1,c=4},
+            //    new Temp(){ a=3,b=3,c=5},
+            //    new Temp(){ a=5,b=2,c=4},
+            //    new Temp(){ a=7,b=4,c=9}
+            //};
 
-            var l = temps.OrderByDescending(e => e.a).ThenBy(e => e.b).ThenBy(e => e.c).ToList();
-            foreach (var r in l)
-            {
-                Console.WriteLine($"{r.a} {r.b} {r.c}");
-            }
-            Console.WriteLine();
-            var l1 = temps.OrderByDescending(e => e.a).OrderBy(e => e.b).OrderBy(e => e.c).ToList();
-            foreach (var r in l1)
-            {
-                Console.WriteLine($"{r.a} {r.b} {r.c}");
-            }
+            //var l = temps.OrderByDescending(e => e.a).ThenBy(e => e.b).ThenBy(e => e.c).ToList();
+            //foreach (var r in l)
+            //{
+            //    Console.WriteLine($"{r.a} {r.b} {r.c}");
+            //}
+            //Console.WriteLine();
+            //var l1 = temps.OrderByDescending(e => e.a).OrderBy(e => e.b).OrderBy(e => e.c).ToList();
+            //foreach (var r in l1)
+            //{
+            //    Console.WriteLine($"{r.a} {r.b} {r.c}");
+            //}
+            //var config = "(1,2,3,4,22,23)*1000*1-(8)*200*2-(17)*300*2";
+            //var productTypes = config.Split('-', StringSplitOptions.RemoveEmptyEntries);
+            //List<VoucherDiscountInfo> vdis = new List<VoucherDiscountInfo>();
+            //foreach (var pt in productTypes)
+            //{
+            //    string[] temp = pt.Split('*', StringSplitOptions.RemoveEmptyEntries);
+            //    vdis.Add(new VoucherDiscountInfo() { 
+            //        ProductTypeIds= temp[0].TrimStart('(').TrimEnd(')').Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
+            //        .Select<string, int>(e => Convert.ToInt32(e)).ToList(),
+            //        DiscountAmount= Convert.ToDecimal(temp[1]),
+            //        Count=Convert.ToInt32(temp[2])
+            //    });
+            //}
+            string date = "20210630";
             Console.ReadKey();
         }
     }
-
+    public class VoucherDiscountInfo
+    {
+        public VoucherDiscountInfo()
+        {
+            ProductTypeIds = new List<int>();
+        }
+        /// <summary>
+        /// 大类列表
+        /// </summary>
+        public List<int> ProductTypeIds { get; set; }
+        /// <summary>
+        /// 代金券金额
+        /// </summary>
+        public decimal DiscountAmount { get; set; }
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int Count { get; set; }
+    }
     public class Temp
     {
         public int a { get; set; }

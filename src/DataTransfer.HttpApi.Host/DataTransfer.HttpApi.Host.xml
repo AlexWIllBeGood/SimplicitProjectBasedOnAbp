@@ -4,6 +4,23 @@
         <name>DataTransfer.HttpApi.Host</name>
     </assembly>
     <members>
+        <member name="T:DataTransfer.HttpApi.Host.Controllers.CoupanController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.CoupanController.#ctor(DataTransfer.Application.Contracts.IApplicationServices.ICoupanApplicationService)">
+            <summary>
+            
+            </summary>
+            <param name="coupanApplicationService"></param>
+        </member>
+        <member name="M:DataTransfer.HttpApi.Host.Controllers.CoupanController.ChangeCoupanProducts">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:DataTransfer.HttpApi.Host.Controllers.ProductController">
             <summary>
             
